@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script type="text/javascript" src="FileSaver.js"></script>
+        <script type="text/javascript" src="webrepl.js"></script>
+    </head>
+    <body>
+        <h1>WebREPL Client</h1>
+        <input type="file" id="filePicker"><button id="sendFile">Send</button>
+        <div id="log"></div>
+        <script>
+            let repl
+            window.onload = () => {
+                let filePicker = document.querySelector('#filePicker')
+                let sendFile = document.querySelector('#sendFile')
+                let fileToSend
+
+                filePicker.addEventListener('change', (e) => {
+                    var files = e.target.files;
+                    fileToSend = files[0]
+                    console.log('filePicker changed', e, fileToSend.name)
+                })
+                sendFile.addEventListener('click', (e) => {
+                    console.log('sendFile', e)
+                    repl.sendFile(fileToSend)
+                })
+
+                repl = new WebREPL({
+                    ip:'192.168.1.4',
+                    password: '',
+                    autoconnect: false
+                })
+                repl.onMessage = (msg) => {
+                    if (typeof msg === 'string') {
+                        document.querySelector('#log').innerHTML += `${msg.replace('\n', '<br>')}`
+                    }
+                }
+                // from `FilePicker.js`
+                repl.saveAs = saveAs
+                repl.connect()
+            }
+        </script>
+    </body>
+</html>
