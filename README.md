@@ -110,13 +110,13 @@ Send a file to MicroPython's filesystem. The file will be uploaded to the root o
 </script>
 ```
 
-### `getFile(filename)`
+### `loadFile(filename)`
 
 - `filename`: Name of the file to download from MicroPython's filesystem.
 
 Downloads file from MicroPython's filesystem.
 
-Note that `getFile()` calls internally the method `saveAs()` that must be replaced by your own handler or the function `saveAs` provided if importing `FilePicker.js`.
+Note that `loadFile()` calls internally the method `saveAs()` that must be replaced by your own handler or the function `saveAs` provided if importing `FilePicker.js`.
 
 #### Example
 
@@ -125,20 +125,20 @@ repl = new WebREPL()
 repl.saveAs = (blob) => {
     // `blob` is an instance of `Blob` with the requested file contents
 }
-repl.getFile('boot.py')
+repl.loadFile('boot.py')
 ```
 
 ### `saveAs(blob)`
 
 - `blob`: Instance of `Blob` with file contents.
 
-This method is fired when calling `getFile()` in order to do something with it's content. Replace it by your own handler or the function `saveAs` provided if importing `FilePicker.js` if you want to "download" the file.
+This method is fired when calling `loadFile()` in order to do something with it's content. Replace it by your own handler or the function `saveAs` provided if importing `FilePicker.js` if you want to "download" the file.
 
 ```html
 <script type="text/javascript" src="FileSaver.js"></script>
 <script>
     repl = new WebREPL()
     repl.saveAs = saveAs
-    repl.getFile('boot.py')
+    repl.loadFile('boot.py')
 </script>
 ```
