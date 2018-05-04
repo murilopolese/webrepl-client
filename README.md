@@ -132,7 +132,7 @@ repl.getFile('boot.py')
 
 - `blob`: Instance of `Blob` with file contents.
 
-This method is fired when calling `getFile()`. Replace it by your own handler or the function `saveAs` provided if importing `FilePicker.js`.
+This method is fired when calling `getFile()` in order to do something with it's content. Replace it by your own handler or the function `saveAs` provided if importing `FilePicker.js` if you want to "download" the file.
 
 ```html
 <script type="text/javascript" src="FileSaver.js"></script>
