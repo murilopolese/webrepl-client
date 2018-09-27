@@ -1,5 +1,6 @@
 {
   "name": "webrepl-client",
+  "version": "0.1.0",
   "description": "MicroPython's WebREPL Client",
   "main": "webrepl.js",
   "scripts": {
