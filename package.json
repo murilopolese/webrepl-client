@@ -5,6 +5,7 @@
   "main": "webrepl.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
+    "docs": "./node_modules/.bin/jsdoc webrepl.js -d ./docs"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/murilopolese/webrepl-client#readme",
   "devDependencies": {
     "chai": "^4.2.0",
+    "jsdoc": "^3.5.5",
     "mocha": "^5.2.0",
     "simple-mock": "^0.8.0"
   }

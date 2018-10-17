@@ -1,4 +1,32 @@
-// Please, all the credit to the FABULOUS work of https://github.com/micropython/webrepl
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: webrepl.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: webrepl.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Please, all the credit to the FABULOUS work of https://github.com/micropython/webrepl
 
 class WebREPL {
     /**
@@ -127,7 +155,7 @@ class WebREPL {
     }
     /**
      * Sends a keyboard interruption (sendStop) and then the character to
-     * perform a software reset on the board (CTRL-D).
+     * perform a software reset on the board (CTRL+D).
      * @example
      * let repl = new WebREPL({ autoconnect: true })
      * let resetButton = document.querySelector('#reset-button')
@@ -140,53 +168,30 @@ class WebREPL {
         this.eval(this.RESET)
     }
     /**
-     * Sends character to enter RAW Repl mode (CTRL-A).
+     * Sends character to enter RAW Repl mode (CTRL+A).
      * @example
      * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
-     *      this.enterRawRepl()
-     *      // Eval or execute code here
-     *      this.exitRawRepl()
-     * }
      */
     enterRawRepl() {
         this.eval(this.ENTER_RAW_REPL)
     }
     /**
-     * Sends character to enter RAW Repl mode (CTRL-D + CTRL-B).
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
-     *      this.enterRawRepl()
-     *      // Eval or execute code here
-     *      this.exitRawRepl()
-     * }
+     * Exits RAW Repl mode.
      */
     exitRawRepl() {
         this.eval(this.EXIT_RAW_REPL)
     }
     /**
-     * Evaluate command to the board followed by a line break (\r).
+     * Evaluate command to the board followed by a line break.
      * @param {string} command - Command to be executed by WebREPL.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
-     *     this.exec('print("hello world!")')
-     * }
      */
     exec(command) {
         this.eval(command + '\r')
     }
     /**
      * Execute a string containing lines of code separated by `\n` in RAW REPL
-     * mode. It will send a keyboard interrupt before entering RAW REPL mode.
+     * mode.
      * @param {string} code - String containing lines of code separated by `\n`.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * let code = `from time import sleep\nwhile True:\n    sleep(1)`
-     * repl.onConnected = function() {
-     *     this.execFromString(code)
-     * }
      */
     execFromString(code) {
         this.sendStop()
@@ -197,11 +202,6 @@ class WebREPL {
     /**
      * Send command to websocket connection.
      * @param {string} command - Command to be sent.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
-     *     this.eval('print("hello world!")\')
-     * }
      */
     eval(command) {
         this.ws.send(command)
@@ -217,7 +217,7 @@ class WebREPL {
         reader.readAsArrayBuffer(file)
     }
     loadFile(path) {
-        // WEBREPL_FILE = "<2sBBQLH64s"
+        // WEBREPL_FILE = "&lt;2sBBQLH64s"
         let rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
         rec[0] = 'W'.charCodeAt(0);
         rec[1] = 'A'.charCodeAt(0);
@@ -225,9 +225,9 @@ class WebREPL {
         rec[3] = 0;
         rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
         rec[12] = 0; rec[13] = 0; rec[14] = 0; rec[15] = 0;
-        rec[16] = path.length & 0xff; rec[17] = (path.length >> 8) & 0xff;
-        for (let i = 0; i < 64; ++i) {
-            if (i < path.length) {
+        rec[16] = path.length &amp; 0xff; rec[17] = (path.length >> 8) &amp; 0xff;
+        for (let i = 0; i &lt; 64; ++i) {
+            if (i &lt; path.length) {
                 rec[18 + i] = path.charCodeAt(i);
             } else {
                 rec[18 + i] = 0;
@@ -248,8 +248,8 @@ remove('${filename}')`
     }
 
     _decodeResp(data) {
-        if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
-            var code = data[2] | (data[3] << 8)
+        if (data[0] == 'W'.charCodeAt(0) &amp;&amp; data[1] == 'B'.charCodeAt(0)) {
+            var code = data[2] | (data[3] &lt;&lt; 8)
             return code;
         } else {
             return -1;
@@ -263,7 +263,7 @@ remove('${filename}')`
                     // first response for put
                     if (this._decodeResp(data) == 0) {
                         // send file data in chunks
-                        for (let offset = 0; offset < this.sendFileData.length; offset += 1024) {
+                        for (let offset = 0; offset &lt; this.sendFileData.length; offset += 1024) {
                             this.ws.send(this.sendFileData.slice(offset, offset + 1024))
                         }
                         this.binaryState = 12
@@ -289,7 +289,7 @@ remove('${filename}')`
                     break;
                 case 22: {
                     // file data
-                    var sz = data[0] | (data[1] << 8)
+                    var sz = data[0] | (data[1] &lt;&lt; 8)
                     if (data.length == 2 + sz) {
                         // we assume that the data comes in single chunks
                         if (sz == 0) {
@@ -339,17 +339,17 @@ remove('${filename}')`
         let dest_fname = this.sendFileName
         let dest_fsize = this.sendFileData.length
 
-        // WEBREPL_FILE = "<2sBBQLH64s"
+        // WEBREPL_FILE = "&lt;2sBBQLH64s"
         let rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64)
         rec[0] = 'W'.charCodeAt(0)
         rec[1] = 'A'.charCodeAt(0)
         rec[2] = 1 // put
         rec[3] = 0
         rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
-        rec[12] = dest_fsize & 0xff; rec[13] = (dest_fsize >> 8) & 0xff; rec[14] = (dest_fsize >> 16) & 0xff; rec[15] = (dest_fsize >> 24) & 0xff;
-        rec[16] = dest_fname.length & 0xff; rec[17] = (dest_fname.length >> 8) & 0xff;
-        for (let i = 0; i < 64; ++i) {
-            if (i < dest_fname.length) {
+        rec[12] = dest_fsize &amp; 0xff; rec[13] = (dest_fsize >> 8) &amp; 0xff; rec[14] = (dest_fsize >> 16) &amp; 0xff; rec[15] = (dest_fsize >> 24) &amp; 0xff;
+        rec[16] = dest_fname.length &amp; 0xff; rec[17] = (dest_fname.length >> 8) &amp; 0xff;
+        for (let i = 0; i &lt; 64; ++i) {
+            if (i &lt; dest_fname.length) {
                 rec[18 + i] = dest_fname.charCodeAt(i)
             } else {
                 rec[18 + i] = 0
@@ -363,3 +363,26 @@ remove('${filename}')`
     }
 
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="WebREPL.html">WebREPL</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 17 2018 15:38:41 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
