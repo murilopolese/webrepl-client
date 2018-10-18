@@ -777,6 +777,159 @@
     
 
     
+    <h4 class="name" id="_decodeResp"><span class="type-signature"></span>_decodeResp<span class="signature">(data)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Decode ArrayBuffer message from websocket.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ArrayBuffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Incoming ArrayBuffer coming from websocket</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line334">line 334</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="_getGetBinary"><span class="type-signature"></span>_getGetBinary<span class="signature">(filename)</span><span class="type-signature"> &rarr; {Uint8Array}</span></h4>
     
 
@@ -879,7 +1032,7 @@ set to send a "get" request to MicroPython.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line288">line 288</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line295">line 295</a>
     </li></ul></dd>
     
 
@@ -1097,6 +1250,195 @@ and specific bits set to send a "put" request to MicroPython.
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="_handleMessage"><span class="type-signature"></span>_handleMessage<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Handles incoming data from websocket based on the data and current
+binaryState the WebREPL currently is set to.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Incoming event object from websocket connection.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ArrayBuffer</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Data sent by MicroPython
+through websocket.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line350">line 350</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2018,7 +2360,7 @@ repl.onConnected = function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line272">line 272</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line279">line 279</a>
     </li></ul></dd>
     
 
@@ -2043,6 +2385,16 @@ repl.onConnected = function() {
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+let filename = 'foo.py'
+repl.saveAs = (blob) => {
+    console.log('File content', blob)
+}
+repl.loadFile(filename)</code></pre>
 
 
 
@@ -2282,6 +2634,148 @@ repl.onMessage = (msg) => {
     console.log('got message', msg)
 }
 repl.connect()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="removeFile"><span class="type-signature"></span>removeFile<span class="signature">(filename)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Remove file from MicroPython's filesystem.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">File name</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line323">line 323</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+let filename = 'foo.py'
+repl.removeFile(filename)</code></pre>
 
 
 
@@ -2815,7 +3309,7 @@ repl.onConnected = function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 10:59:26 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 13:18:40 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -326,6 +326,11 @@ remove('${filename}')`
         this.execFromString(pCode)
     }
 
+    /**
+     * Decode ArrayBuffer message from websocket.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer coming from websocket
+     * @returns {number}
+     */
     _decodeResp(data) {
         if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
             var code = data[2] | (data[3] << 8)
@@ -334,77 +339,35 @@ remove('${filename}')`
             return -1;
         }
     }
+
+    /**
+     * Handles incoming data from websocket based on the data and current
+     * binaryState the WebREPL currently is set to.
+     * @param {object} event - Incoming event object from websocket connection.
+     * @param {ArrayBuffer|String} event.data - Data sent by MicroPython
+     * through websocket.
+     */
     _handleMessage(event) {
         if (event.data instanceof ArrayBuffer) {
             let data = new Uint8Array(event.data)
             switch (this.binaryState) {
                 case 11:
-                    // first response for put
-                    if (this._decodeResp(data) == 0) {
-                        // send file data in chunks
-                        for (let offset = 0; offset < this.sendFileData.length; offset += 1024) {
-                            this.ws.send(this.sendFileData.slice(offset, offset + 1024))
-                        }
-                        this.binaryState = 12
-                    }
+                    this._initPut(data)
                     break
                 case 12:
-                    // final response for put
-                    if (this._decodeResp(data) == 0) {
-                        console.log(`Sent ${this.sendFileName}, ${this.sendFileData.length} bytes`)
-                    } else {
-                        console.log(`Failed sending ${this.sendFileName}`)
-                    }
-                    this.binaryState = 0
+                    this._finalPut(data)
                     break;
                 case 21:
-                    // first response for get
-                    if (this._decodeResp(data) == 0) {
-                        this.binaryState = 22
-                        var rec = new Uint8Array(1)
-                        rec[0] = 0
-                        this.ws.send(rec)
-                    }
+                    this._initGet(data)
                     break;
-                case 22: {
-                    // file data
-                    var sz = data[0] | (data[1] << 8)
-                    if (data.length == 2 + sz) {
-                        // we assume that the data comes in single chunks
-                        if (sz == 0) {
-                            // end of file
-                            this.binaryState = 23
-                        } else {
-                            // accumulate incoming data to this.getFileData
-                            var new_buf = new Uint8Array(this.getFileData.length + sz)
-                            new_buf.set(this.getFileData)
-                            new_buf.set(data.slice(2), this.getFileData.length)
-                            this.getFileData = new_buf
-                            console.log('Getting ' + this.getFileName + ', ' + this.getFileData.length + ' bytes')
-
-                            var rec = new Uint8Array(1)
-                            rec[0] = 0
-                            this.ws.send(rec)
-                        }
-                    } else {
-                        this.binaryState = 0
-                    }
-                    break;
-                }
+                case 22:
+                    this._processGet(data)
+                    break
                 case 23:
-                    // final response
-                    if (this._decodeResp(data) == 0) {
-                        console.log(`Got ${this.getFileName}, ${this.getFileData.length} bytes`)
-                        this.saveAs(new Blob([this.getFileData], {type: "application/octet-stream"}), this.getFileName)
-                    } else {
-                        console.log(`Failed getting ${this.getFileName}`)
-                    }
-                    this.binaryState = 0
+                    this._finalGet(data)
                     break
                 case 31:
-                    // first (and last) response for GET_VER
-                    console.log('GET_VER', data)
-                    this.binaryState = 0
+                    this._getVersion(data)
                     break
             }
         }
@@ -415,5 +378,80 @@ remove('${filename}')`
         this.onMessage(event.data)
     }
 
+    // First response for put
+    _initPut(data) {
+        // first response for put
+        if (this._decodeResp(data) == 0) {
+            // send file data in chunks
+            for (let offset = 0; offset < this.sendFileData.length; offset += 1024) {
+                this.ws.send(this.sendFileData.slice(offset, offset + 1024))
+            }
+            this.binaryState = 12
+        }
+    }
+
+    // Final response for put
+    _finalPut(data) {
+        // final response for put
+        if (this._decodeResp(data) == 0) {
+            console.log(`Sent ${this.sendFileName}, ${this.sendFileData.length} bytes`)
+        } else {
+            console.log(`Failed sending ${this.sendFileName}`)
+        }
+        this.binaryState = 0
+    }
+
+    _initGet(data) {
+        // first response for get
+        if (this._decodeResp(data) == 0) {
+            this.binaryState = 22
+            var rec = new Uint8Array(1)
+            rec[0] = 0
+            this.ws.send(rec)
+        }
+    }
+
+    // file data
+    _processGet(data) {
+        // file data
+        var sz = data[0] | (data[1] << 8)
+        if (data.length == 2 + sz) {
+            // we assume that the data comes in single chunks
+            if (sz == 0) {
+                // end of file
+                this.binaryState = 23
+            } else {
+                // accumulate incoming data to this.getFileData
+                    var new_buf = new Uint8Array(this.getFileData.length + sz)
+                new_buf.set(this.getFileData)
+                new_buf.set(data.slice(2), this.getFileData.length)
+                this.getFileData = new_buf
+                console.log('Getting ' + this.getFileName + ', ' + this.getFileData.length + ' bytes')
+
+                var rec = new Uint8Array(1)
+                rec[0] = 0
+                this.ws.send(rec)
+            }
+        } else {
+            this.binaryState = 0
+        }
+    }
+
+    _finalGet(data) {
+        // final response
+        if (this._decodeResp(data) == 0) {
+            console.log(`Got ${this.getFileName}, ${this.getFileData.length} bytes`)
+            this.saveAs(new Blob([this.getFileData], {type: "application/octet-stream"}), this.getFileName)
+        } else {
+            console.log(`Failed getting ${this.getFileName}`)
+        }
+        this.binaryState = 0
+    }
+
+    _getVersion(data) {
+        // first (and last) response for GET_VER
+        console.log('GET_VER', data)
+        this.binaryState = 0
+    }
 
 }
