@@ -63,6 +63,7 @@ class WebREPL {
             this.ws.onmessage = this._handleMessage.bind(this)
         }
     }
+
     /**
      * Close the current websocket connection.
      * @example
@@ -85,7 +86,7 @@ class WebREPL {
     onConnected() {}
 
     /**
-     * Called on incoming websocket messages.
+     * Called on incoming string websocket messages.
      * @param {string} msg - Incoming message from websocket connection.
      * @example
      * let repl = new WebREPL()
@@ -125,6 +126,7 @@ class WebREPL {
     sendStop() {
         this.eval(this.STOP)
     }
+
     /**
      * Sends a keyboard interruption (sendStop) and then the character to
      * perform a software reset on the board (CTRL-D).
@@ -139,6 +141,7 @@ class WebREPL {
         this.sendStop()
         this.eval(this.RESET)
     }
+
     /**
      * Sends character to enter RAW Repl mode (CTRL-A).
      * @example
@@ -152,6 +155,7 @@ class WebREPL {
     enterRawRepl() {
         this.eval(this.ENTER_RAW_REPL)
     }
+
     /**
      * Sends character to enter RAW Repl mode (CTRL-D + CTRL-B).
      * @example
@@ -165,6 +169,7 @@ class WebREPL {
     exitRawRepl() {
         this.eval(this.EXIT_RAW_REPL)
     }
+
     /**
      * Evaluate command to the board followed by a line break (\r).
      * @param {string} command - Command to be executed by WebREPL.
@@ -177,6 +182,7 @@ class WebREPL {
     exec(command) {
         this.eval(command + '\r')
     }
+
     /**
      * Execute a string containing lines of code separated by `\n` in RAW REPL
      * mode. It will send a keyboard interrupt before entering RAW REPL mode.
@@ -194,6 +200,7 @@ class WebREPL {
         this.eval(code)
         this.exitRawRepl()
     }
+
     /**
      * Send command to websocket connection.
      * @param {string} command - Command to be sent.
@@ -207,16 +214,85 @@ class WebREPL {
         this.ws.send(command)
     }
 
-    sendFile(file) {
-        this.sendFileName = file.name
-        let reader = new FileReader()
-        reader.onload = (e) => {
-            this.sendFileData = new Uint8Array(e.target.result)
-            this._sendFile()
-        };
-        reader.readAsArrayBuffer(file)
+    /**
+     * Save file to MicroPython's filesystem. Will use the filename from the
+     * `file` argument object as the filesystem path.
+     * @param {string} filename - Name of file to be sent
+     * @param {Uint8Array} buffer - Typed array buffer with content of file
+     * to be sent.
+     * @example
+     * let repl = new WebREPL({ autoconnect: true })
+     * let filename = 'foo.py'
+     * let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
+     * repl.sendFile(filename, buffer)
+     */
+    sendFile(filename, buffer) {
+        this.sendFileName = filename
+        this.sendFileData = buffer
+        let rec = this._getPutBinary(
+            this.sendFileName, this.sendFileData.length
+        )
+        // initiate put
+        this.binaryState = 11
+        console.log('Sending ' + this.sendFileName + '...')
+        this.ws.send(rec)
     }
-    loadFile(path) {
+
+    /**
+     * Given a filename and the file size, get a `Uint8Array` with fixed length
+     * and specific bits set to send a "put" request to MicroPython.
+     * @param {string} filename - File name
+     * @param {number} filesize - Length of ArrayBuffer containing file data
+     * @returns {Uint8Array}
+     */
+    _getPutBinary(filename, filesize) {
+        // WEBREPL_FILE = "<2sBBQLH64s"
+        let rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64)
+        rec[0] = 'W'.charCodeAt(0)
+        rec[1] = 'A'.charCodeAt(0)
+        rec[2] = 1 // put
+        rec[3] = 0
+        rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
+        rec[12] = filesize & 0xff; rec[13] = (filesize >> 8) & 0xff; rec[14] = (filesize >> 16) & 0xff; rec[15] = (filesize >> 24) & 0xff;
+        rec[16] = filename.length & 0xff; rec[17] = (filename.length >> 8) & 0xff;
+        for (let i = 0; i < 64; ++i) {
+            if (i < filename.length) {
+                rec[18 + i] = filename.charCodeAt(i)
+            } else {
+                rec[18 + i] = 0
+            }
+        }
+        return rec
+    }
+
+    /**
+     * Load file from MicroPython's filesystem.
+     * @param {string} filename - File name
+     * @example
+     * let repl = new WebREPL({ autoconnect: true })
+     * let filename = 'foo.py'
+     * repl.saveAs = (blob) => {
+     *     console.log('File content', blob)
+     * }
+     * repl.loadFile(filename)
+     */
+    loadFile(filename) {
+        this.getFileName = filename
+        this.getFileData = new Uint8Array(0)
+        let rec = this._getGetBinary(this.getFileName)
+        // initiate get
+        this.binaryState = 21
+        console.log('Getting ' + this.getFileName + '...')
+        this.ws.send(rec)
+    }
+
+    /**
+     * Given a filename, get a `Uint8Array` with fixed length and specific bits
+     * set to send a "get" request to MicroPython.
+     * @param {string} filename - File name
+     * @returns {Uint8Array}
+     */
+    _getGetBinary(filename) {
         // WEBREPL_FILE = "<2sBBQLH64s"
         let rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
         rec[0] = 'W'.charCodeAt(0);
@@ -225,22 +301,25 @@ class WebREPL {
         rec[3] = 0;
         rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
         rec[12] = 0; rec[13] = 0; rec[14] = 0; rec[15] = 0;
-        rec[16] = path.length & 0xff; rec[17] = (path.length >> 8) & 0xff;
+        rec[16] = filename.length & 0xff; rec[17] = (filename.length >> 8) & 0xff;
         for (let i = 0; i < 64; ++i) {
-            if (i < path.length) {
-                rec[18 + i] = path.charCodeAt(i);
+            if (i < filename.length) {
+                rec[18 + i] = filename.charCodeAt(i);
             } else {
                 rec[18 + i] = 0;
             }
         }
-
-        // initiate get
-        this.binaryState = 21;
-        this.getFileName = path;
-        this.getFileData = new Uint8Array(0);
-        console.log('Getting ' + this.getFileName + '...');
-        this.ws.send(rec);
+        return rec
     }
+
+    /**
+     * Remove file from MicroPython's filesystem.
+     * @param {string} filename - File name
+     * @example
+     * let repl = new WebREPL({ autoconnect: true })
+     * let filename = 'foo.py'
+     * repl.removeFile(filename)
+     */
     removeFile(filename) {
         const pCode = `from os import remove
 remove('${filename}')`
@@ -335,31 +414,6 @@ remove('${filename}')`
         }
         this.onMessage(event.data)
     }
-    _sendFile() {
-        let dest_fname = this.sendFileName
-        let dest_fsize = this.sendFileData.length
 
-        // WEBREPL_FILE = "<2sBBQLH64s"
-        let rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64)
-        rec[0] = 'W'.charCodeAt(0)
-        rec[1] = 'A'.charCodeAt(0)
-        rec[2] = 1 // put
-        rec[3] = 0
-        rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
-        rec[12] = dest_fsize & 0xff; rec[13] = (dest_fsize >> 8) & 0xff; rec[14] = (dest_fsize >> 16) & 0xff; rec[15] = (dest_fsize >> 24) & 0xff;
-        rec[16] = dest_fname.length & 0xff; rec[17] = (dest_fname.length >> 8) & 0xff;
-        for (let i = 0; i < 64; ++i) {
-            if (i < dest_fname.length) {
-                rec[18 + i] = dest_fname.charCodeAt(i)
-            } else {
-                rec[18 + i] = 0
-            }
-        }
-
-        // initiate put
-        this.binaryState = 11
-        console.log('Sending ' + this.sendFileName + '...')
-        this.ws.send(rec)
-    }
 
 }

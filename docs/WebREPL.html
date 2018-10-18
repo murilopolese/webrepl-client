@@ -777,6 +777,337 @@
     
 
     
+    <h4 class="name" id="_getGetBinary"><span class="type-signature"></span>_getGetBinary<span class="signature">(filename)</span><span class="type-signature"> &rarr; {Uint8Array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Given a filename, get a `Uint8Array` with fixed length and specific bits
+set to send a "get" request to MicroPython.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">File name</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line288">line 288</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Uint8Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="_getPutBinary"><span class="type-signature"></span>_getPutBinary<span class="signature">(filename, filesize)</span><span class="type-signature"> &rarr; {Uint8Array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Given a filename and the file size, get a `Uint8Array` with fixed length
+and specific bits set to send a "put" request to MicroPython.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">File name</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filesize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Length of ArrayBuffer containing file data</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line248">line 248</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Uint8Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="connect"><span class="type-signature"></span>connect<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
@@ -923,7 +1254,7 @@ repl.connect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line72">line 72</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line73">line 73</a>
     </li></ul></dd>
     
 
@@ -971,7 +1302,7 @@ repl.disconnect()</code></pre>
 
 
 <div class="description">
-    Sends character to enter RAW Repl mode (CTRL+A).
+    Sends character to enter RAW Repl mode (CTRL-A).
 </div>
 
 
@@ -1015,7 +1346,7 @@ repl.disconnect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line147">line 147</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -1044,7 +1375,12 @@ repl.disconnect()</code></pre>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })</code></pre>
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+repl.onConnected = function() {
+     this.enterRawRepl()
+     // Eval or execute code here
+     this.exitRawRepl()
+}</code></pre>
 
 
 
@@ -1155,7 +1491,7 @@ repl.disconnect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line178">line 178</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -1182,6 +1518,14 @@ repl.disconnect()</code></pre>
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+repl.onConnected = function() {
+    this.eval('print("hello world!")\')
+}</code></pre>
+
+
 
         
             
@@ -1197,7 +1541,7 @@ repl.disconnect()</code></pre>
 
 
 <div class="description">
-    Evaluate command to the board followed by a line break.
+    Evaluate command to the board followed by a line break (\r).
 </div>
 
 
@@ -1290,7 +1634,7 @@ repl.disconnect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line160">line 160</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line182">line 182</a>
     </li></ul></dd>
     
 
@@ -1317,6 +1661,14 @@ repl.disconnect()</code></pre>
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+repl.onConnected = function() {
+    this.exec('print("hello world!")')
+}</code></pre>
+
+
 
         
             
@@ -1333,7 +1685,7 @@ repl.disconnect()</code></pre>
 
 <div class="description">
     Execute a string containing lines of code separated by `\n` in RAW REPL
-mode.
+mode. It will send a keyboard interrupt before entering RAW REPL mode.
 </div>
 
 
@@ -1426,7 +1778,7 @@ mode.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line168">line 168</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -1453,6 +1805,15 @@ mode.
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+let code = `from time import sleep\nwhile True:\n    sleep(1)`
+repl.onConnected = function() {
+    this.execFromString(code)
+}</code></pre>
+
+
 
         
             
@@ -1468,7 +1829,7 @@ mode.
 
 
 <div class="description">
-    Exits RAW Repl mode.
+    Sends character to enter RAW Repl mode (CTRL-D + CTRL-B).
 </div>
 
 
@@ -1512,7 +1873,152 @@ mode.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line153">line 153</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line169">line 169</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+repl.onConnected = function() {
+     this.enterRawRepl()
+     // Eval or execute code here
+     this.exitRawRepl()
+}</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="loadFile"><span class="type-signature"></span>loadFile<span class="signature">(filename)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Load file from MicroPython's filesystem.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">File name</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line272">line 272</a>
     </li></ul></dd>
     
 
@@ -1598,7 +2104,7 @@ mode.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line85">line 85</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -1649,7 +2155,7 @@ repl.connect()</code></pre>
 
 
 <div class="description">
-    Called on incoming websocket messages.
+    Called on incoming string websocket messages.
 </div>
 
 
@@ -1742,7 +2248,7 @@ repl.connect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line97">line 97</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line98">line 98</a>
     </li></ul></dd>
     
 
@@ -1886,7 +2392,7 @@ repl.connect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line114">line 114</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line115">line 115</a>
     </li></ul></dd>
     
 
@@ -1925,6 +2431,174 @@ repl.saveAs = (blob) => {
     }
 }
 repl.connect()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="sendFile"><span class="type-signature"></span>sendFile<span class="signature">(filename, buffer)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Save file to MicroPython's filesystem. Will use the filename from the
+`file` argument object as the filesystem path.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Name of file to be sent</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>buffer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Typed array buffer with content of file
+to be sent.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line229">line 229</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+let filename = 'foo.py'
+let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
+repl.sendFile(filename, buffer)</code></pre>
 
 
 
@@ -1986,7 +2660,7 @@ repl.connect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line125">line 125</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line126">line 126</a>
     </li></ul></dd>
     
 
@@ -2038,7 +2712,7 @@ repl.onConnected = () => {
 
 <div class="description">
     Sends a keyboard interruption (sendStop) and then the character to
-perform a software reset on the board (CTRL+D).
+perform a software reset on the board (CTRL-D).
 </div>
 
 
@@ -2082,7 +2756,7 @@ perform a software reset on the board (CTRL+D).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line138">line 138</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -2141,7 +2815,7 @@ repl.onConnected = function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Oct 17 2018 15:38:41 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 10:59:26 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>
