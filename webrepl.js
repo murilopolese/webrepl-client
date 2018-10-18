@@ -378,7 +378,12 @@ remove('${filename}')`
         this.onMessage(event.data)
     }
 
-    // First response for put
+    /**
+     * Method called when a specific ArrayBuffer data is received from websocket
+     * and the binaryState is 11. This will set the binaryState to 12 and will
+     * send the file data through websocket.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
     _initPut(data) {
         // first response for put
         if (this._decodeResp(data) == 0) {
@@ -390,7 +395,12 @@ remove('${filename}')`
         }
     }
 
-    // Final response for put
+    /**
+     * Method called when a specific ArrayBuffer data is received from websocket
+     * and the binaryState is 12. This means the WebREPL class has finished the
+     * put request and will set the binaryState back to 0.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
     _finalPut(data) {
         // final response for put
         if (this._decodeResp(data) == 0) {
@@ -401,6 +411,12 @@ remove('${filename}')`
         this.binaryState = 0
     }
 
+    /**
+     * Method called when getting a specific ArrayBuffer data from websocket and
+     * binaryState is 21.  This put the WebREPL class in a state ready to
+     * process file data comming from the websocket.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
     _initGet(data) {
         // first response for get
         if (this._decodeResp(data) == 0) {
@@ -411,7 +427,14 @@ remove('${filename}')`
         }
     }
 
-    // file data
+    /**
+     * Method called when getting a specific ArrayBuffer data from websocket and
+     * binaryState is 22.  This will process the incoming data coming from the
+     * websocket appending it to the getFileData. Once the it gets and empty
+     * data it sets the binaryState to 23, putting the WebREPL class in a state
+     * ready to handle the file data.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
     _processGet(data) {
         // file data
         var sz = data[0] | (data[1] << 8)
@@ -422,12 +445,11 @@ remove('${filename}')`
                 this.binaryState = 23
             } else {
                 // accumulate incoming data to this.getFileData
-                    var new_buf = new Uint8Array(this.getFileData.length + sz)
+                var new_buf = new Uint8Array(this.getFileData.length + sz)
                 new_buf.set(this.getFileData)
                 new_buf.set(data.slice(2), this.getFileData.length)
                 this.getFileData = new_buf
                 console.log('Getting ' + this.getFileName + ', ' + this.getFileData.length + ' bytes')
-
                 var rec = new Uint8Array(1)
                 rec[0] = 0
                 this.ws.send(rec)
@@ -437,6 +459,14 @@ remove('${filename}')`
         }
     }
 
+    /**
+     * Method called when a specific ArrayBuffer data is received from websocket
+     * and the binaryState is 23. This means the WebREPL class has finished to
+     * load/process the requested file and will set the binaryState back to 0
+     * but also call saveAs with a Blob instance containing the file name and
+     * data.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
     _finalGet(data) {
         // final response
         if (this._decodeResp(data) == 0) {
@@ -447,11 +477,4 @@ remove('${filename}')`
         }
         this.binaryState = 0
     }
-
-    _getVersion(data) {
-        // first (and last) response for GET_VER
-        console.log('GET_VER', data)
-        this.binaryState = 0
-    }
-
 }

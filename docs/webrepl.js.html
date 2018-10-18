@@ -380,72 +380,22 @@ remove('${filename}')`
             let data = new Uint8Array(event.data)
             switch (this.binaryState) {
                 case 11:
-                    // first response for put
-                    if (this._decodeResp(data) == 0) {
-                        // send file data in chunks
-                        for (let offset = 0; offset &lt; this.sendFileData.length; offset += 1024) {
-                            this.ws.send(this.sendFileData.slice(offset, offset + 1024))
-                        }
-                        this.binaryState = 12
-                    }
+                    this._initPut(data)
                     break
                 case 12:
-                    // final response for put
-                    if (this._decodeResp(data) == 0) {
-                        console.log(`Sent ${this.sendFileName}, ${this.sendFileData.length} bytes`)
-                    } else {
-                        console.log(`Failed sending ${this.sendFileName}`)
-                    }
-                    this.binaryState = 0
+                    this._finalPut(data)
                     break;
                 case 21:
-                    // first response for get
-                    if (this._decodeResp(data) == 0) {
-                        this.binaryState = 22
-                        var rec = new Uint8Array(1)
-                        rec[0] = 0
-                        this.ws.send(rec)
-                    }
+                    this._initGet(data)
                     break;
-                case 22: {
-                    // file data
-                    var sz = data[0] | (data[1] &lt;&lt; 8)
-                    if (data.length == 2 + sz) {
-                        // we assume that the data comes in single chunks
-                        if (sz == 0) {
-                            // end of file
-                            this.binaryState = 23
-                        } else {
-                            // accumulate incoming data to this.getFileData
-                                var new_buf = new Uint8Array(this.getFileData.length + sz)
-                            new_buf.set(this.getFileData)
-                            new_buf.set(data.slice(2), this.getFileData.length)
-                            this.getFileData = new_buf
-                            console.log('Getting ' + this.getFileName + ', ' + this.getFileData.length + ' bytes')
-
-                            var rec = new Uint8Array(1)
-                            rec[0] = 0
-                            this.ws.send(rec)
-                        }
-                    } else {
-                        this.binaryState = 0
-                    }
-                    break;
-                }
+                case 22:
+                    this._processGet(data)
+                    break
                 case 23:
-                    // final response
-                    if (this._decodeResp(data) == 0) {
-                        console.log(`Got ${this.getFileName}, ${this.getFileData.length} bytes`)
-                        this.saveAs(new Blob([this.getFileData], {type: "application/octet-stream"}), this.getFileName)
-                    } else {
-                        console.log(`Failed getting ${this.getFileName}`)
-                    }
-                    this.binaryState = 0
+                    this._finalGet(data)
                     break
                 case 31:
-                    // first (and last) response for GET_VER
-                    console.log('GET_VER', data)
-                    this.binaryState = 0
+                    this._getVersion(data)
                     break
             }
         }
@@ -456,7 +406,105 @@ remove('${filename}')`
         this.onMessage(event.data)
     }
 
+    /**
+     * Method called when a specific ArrayBuffer data is received from websocket
+     * and the binaryState is 11. This will set the binaryState to 12 and will
+     * send the file data through websocket.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
+    _initPut(data) {
+        // first response for put
+        if (this._decodeResp(data) == 0) {
+            // send file data in chunks
+            for (let offset = 0; offset &lt; this.sendFileData.length; offset += 1024) {
+                this.ws.send(this.sendFileData.slice(offset, offset + 1024))
+            }
+            this.binaryState = 12
+        }
+    }
 
+    /**
+     * Method called when a specific ArrayBuffer data is received from websocket
+     * and the binaryState is 12. This means the WebREPL class has finished the
+     * put request and will set the binaryState back to 0.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
+    _finalPut(data) {
+        // final response for put
+        if (this._decodeResp(data) == 0) {
+            console.log(`Sent ${this.sendFileName}, ${this.sendFileData.length} bytes`)
+        } else {
+            console.log(`Failed sending ${this.sendFileName}`)
+        }
+        this.binaryState = 0
+    }
+
+    /**
+     * Method called when getting a specific ArrayBuffer data from websocket and
+     * binaryState is 21.  This put the WebREPL class in a state ready to
+     * process file data comming from the websocket.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
+    _initGet(data) {
+        // first response for get
+        if (this._decodeResp(data) == 0) {
+            this.binaryState = 22
+            var rec = new Uint8Array(1)
+            rec[0] = 0
+            this.ws.send(rec)
+        }
+    }
+
+    /**
+     * Method called when getting a specific ArrayBuffer data from websocket and
+     * binaryState is 22.  This will process the incoming data coming from the
+     * websocket appending it to the getFileData. Once the it gets and empty
+     * data it sets the binaryState to 23, putting the WebREPL class in a state
+     * ready to handle the file data.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
+    _processGet(data) {
+        // file data
+        var sz = data[0] | (data[1] &lt;&lt; 8)
+        if (data.length == 2 + sz) {
+            // we assume that the data comes in single chunks
+            if (sz == 0) {
+                // end of file
+                this.binaryState = 23
+            } else {
+                // accumulate incoming data to this.getFileData
+                var new_buf = new Uint8Array(this.getFileData.length + sz)
+                new_buf.set(this.getFileData)
+                new_buf.set(data.slice(2), this.getFileData.length)
+                this.getFileData = new_buf
+                console.log('Getting ' + this.getFileName + ', ' + this.getFileData.length + ' bytes')
+                var rec = new Uint8Array(1)
+                rec[0] = 0
+                this.ws.send(rec)
+            }
+        } else {
+            this.binaryState = 0
+        }
+    }
+
+    /**
+     * Method called when a specific ArrayBuffer data is received from websocket
+     * and the binaryState is 23. This means the WebREPL class has finished to
+     * load/process the requested file and will set the binaryState back to 0
+     * but also call saveAs with a Blob instance containing the file name and
+     * data.
+     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
+     */
+    _finalGet(data) {
+        // final response
+        if (this._decodeResp(data) == 0) {
+            console.log(`Got ${this.getFileName}, ${this.getFileData.length} bytes`)
+            this.saveAs(new Blob([this.getFileData], {type: "application/octet-stream"}), this.getFileName)
+        } else {
+            console.log(`Failed getting ${this.getFileName}`)
+        }
+        this.binaryState = 0
+    }
 }
 </code></pre>
         </article>
@@ -474,7 +522,7 @@ remove('${filename}')`
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 13:18:40 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Oct 18 2018 18:32:45 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>
