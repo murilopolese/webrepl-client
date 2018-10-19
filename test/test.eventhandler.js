@@ -114,11 +114,11 @@ describe('Handling Get/Put file', function() {
         assert.deepEqual(repl.ws.send.lastCall.arg, rec)
     })
     // Process get
-    it('should set binaryState to 0 when calling `_processGet`', function() {
-        // TODO: Understand how _processGet works
-    })
-    it('should set binaryState to 23 if data is empty when calling `_processGet`', function() {
-        // TODO: Understand how _processGet works
-    })
+    // it('should set binaryState to 0 when calling `_processGet`', function() {
+    //     // TODO: Understand how _processGet works
+    // })
+    // it('should set binaryState to 23 if data is empty when calling `_processGet`', function() {
+    //     // TODO: Understand how _processGet works
+    // })
 
 })

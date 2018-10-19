@@ -5,7 +5,7 @@
   "main": "webrepl.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "docs": "./node_modules/.bin/jsdoc webrepl.js -d ./docs"
+    "docs": "./node_modules/.bin/jsdoc webrepl.js README.md -d ./docs"
   },
   "repository": {
     "type": "git",

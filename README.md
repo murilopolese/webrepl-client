@@ -1,144 +1,30 @@
-# MicroPython's WebREPL Client
+## MicroPython's WebREPL Client
 
-Extracting all the logic to interact with MicroPython's WebREPL from [the official repository](https://github.com/micropython/webrepl).
+MicroPython's WebREPL allows a REPL (interactive prompt) over WebSocket. It makes possible to interact with MicroPython using only a browser without additional drivers and software installation or cables. It also offers file transfer capabilities.
 
-## How to use it
+To use `webrepl-client` you must have started WebREPL on your board and connect both computer and board to the same wifi network (even if it's the network created by the board).
 
-1. Import the file `FileSaver.js`
-1. Import the file `webrepl.js`
-1. Make good use of the class `WebREPL` (check example of use on `index.html`)
+This library extracts most logic to interact with MicroPython's WebREPL from [the official repository](https://github.com/micropython/webrepl).
 
-## API
+### Available features
 
-### `WebRepl(option)`
+- Connects to board running MicroPython's WebREPL
+- Inputs password without prompting user
+- Offers callbacks on connection opening and incoming messages
+- Send, retrieve and remove files from MicroPython's filesystem
+- Offers a callback with file's blob when loading file
+- Evaluate commands and string containing lines of code
+- Enter and exit "raw repl" mode
+- Send keyboard interrupt and software reset
 
-- `option`: Dictionary that can specify `ip`, the WebREPL `passord` and if it should `autoconnect`.
+### How to use it
 
-Constructor for `WebREPL` class.
+1. Run `yarn add murilopolese/webrepl-client` (or `bower install murilopolese/webrepl-client`)
+1. Include `webrepl.js` and optionally `FileSaver.js`
+1. Check the examples and documentation to see what's possible to do.
 
-Returns an instance of `WebREPL`.
+### Roadmap
 
-#### Example
-
-```javascript
-repl = new WebREPL({
-    ip: '192.168.1.4',
-    password: 'micropythoN',
-    autoconnect: true
-})
-```
-
-### `connect()`
-
-Connects to MicroPython WebREPL.
-
-#### Example
-
-```javascript
-repl = new WebREPL()
-repl.connect()
-```
-### `disconnect()`
-
-Disconnects from MicroPython's WebREPL.
-
-#### Example
-
-```javascript
-repl = new WebREPL()
-repl.disconnect()
-```
-
-### `onMessage(msg)`
-
-- `msg`: Data from the event coming from the `WebSocket` connection. The parameter `msg` can be a `string`, `object`, `blob` (maybe more? I don't know exactly).
-
-This method is called everytime MicroPython's WebREPL emits events through the `WebSocket` connection. Override it with your own function to have access to the messages.
-
-#### Example
-
-```javascript
-repl = new WebREPL({
-    autoconnect: false
-})
-repl.onMessage = (msg) => {
-    if (typeof msg === 'string') {
-        console.log('got message', msg)
-    }
-}
-repl.connect()
-```
-
-
-### `eval(command)`
-
-- `command`: Python instruction to be evaluated by MicroPython's WebREPL.
-
-Send instruction to be evaluated by MicroPython's WebREPL.
-
-#### Example
-
-```javascript
-repl = new WebREPL({
-    autoconnect: false
-})
-repl.onMessage = (msg) => {
-    if (typeof msg === 'string') {
-        console.log('got message', msg)
-    }
-}
-repl.connect()
-repl.eval('print("Hello World!")')
-```
-
-### `sendFile(file)`
-
-- `file`: File to be sent to MicroPython's filesystem. `file` must be an instance of `File`.
-
-Send a file to MicroPython's filesystem. The file will be uploaded to the root of MicroPython's filesystem with the same name.
-
-#### Example
-
-```html
-<input type="file" id="filePicker">
-<script>
-    repl = new WebREPL()
-    document.querySelector('#filePicker').addEventListener('change', (e) => {
-        let files = e.target.files
-        repl.sendFile(files[0])
-    })
-</script>
-```
-
-### `loadFile(filename)`
-
-- `filename`: Name of the file to download from MicroPython's filesystem.
-
-Downloads file from MicroPython's filesystem.
-
-Note that `loadFile()` calls internally the method `saveAs()` that must be replaced by your own handler or the function `saveAs` provided if importing `FilePicker.js`.
-
-#### Example
-
-```javascript
-repl = new WebREPL()
-repl.saveAs = (blob) => {
-    // `blob` is an instance of `Blob` with the requested file contents
-}
-repl.loadFile('boot.py')
-```
-
-### `saveAs(blob)`
-
-- `blob`: Instance of `Blob` with file contents.
-
-This method is fired when calling `loadFile()` in order to do something with it's content. Replace it by your own handler or the function `saveAs` provided if importing `FilePicker.js` if you want to "download" the file.
-
-```html
-<script type="text/javascript" src="FileSaver.js"></script>
-<script>
-    repl = new WebREPL()
-    repl.saveAs = saveAs
-    repl.loadFile('boot.py')
-</script>
-```
+- Offer AMD, CommonJS and ES6 modules
+- Nodejs support
+- Callbacks for code and command execution
