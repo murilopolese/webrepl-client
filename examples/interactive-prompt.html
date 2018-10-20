@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Interactive prompt</title>
+        <!-- <script src="https://unpkg.com/@webcomponents/custom-elements"></script> -->
+        <script type="text/javascript" src="components/custom-elements.min.js"></script>
+        <script type="text/javascript" src="components/webrepl-connection.js"></script>
+        <script type="text/javascript" src="components/webrepl-terminal.js"></script>
+        <script type="text/javascript" src="components/webrepl-command.js"></script>
+        <script type="text/javascript" src="../webrepl.js"></script>
+        <script type="text/javascript" src="connect.js"></script>
+    </head>
+    <body>
+        <h1>Interactive prompt</h1>
+        <webrepl-connection></webrepl-connection>
+        <webrepl-terminal></webrepl-terminal>
+        <webrepl-command command="print('hello world!')"></webrepl-command>
+
+        <script type="text/javascript">
+            let repl
+
+            window.onload = () => {
+                let connectionForm = document.querySelector('webrepl-connection')
+                let commandForm = document.querySelector('webrepl-command')
+                let terminal = document.querySelector('webrepl-terminal')
+                connectionForm.addEventListener('connect', (e) => {
+                    connect(e.detail.ip, e.detail.password)
+                        .then((connectedRepl) => {
+                            repl = connectedRepl
+                            repl.onMessage = terminal.output.bind(terminal)
+                            connectionForm.setAttribute('connected', true)
+                            commandForm.setAttribute('connected', true)
+                            commandForm.addEventListener('submit-command', (e) => {
+                                repl.exec(e.detail)
+                            })
+                        })
+                })
+            }
+        </script>
+    </body>
+</html>

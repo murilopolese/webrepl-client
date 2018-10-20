@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>File transfer</title>
+        <!-- <script src="https://unpkg.com/@webcomponents/custom-elements"></script> -->
+        <script type="text/javascript" src="components/custom-elements.min.js"></script>
+        <script type="text/javascript" src="components/webrepl-connection.js"></script>
+        <script type="text/javascript" src="components/webrepl-file-manager.js"></script>
+        <script type="text/javascript" src="../FileSaver.js"></script>
+        <script type="text/javascript" src="../webrepl.js"></script>
+        <script type="text/javascript" src="connect.js"></script>
+    </head>
+    <body>
+        <h1>File Manager</h1>
+        <webrepl-connection ip="192.168.1.176" password="123456"></webrepl-connection>
+        <webrepl-file-manager></webrepl-file-manager>
+
+        <script type="text/javascript">
+            window.onload = () => {
+                let repl
+                let state =  'disconnected'
+                let buffer = ''
+                let connectionForm = document.querySelector('webrepl-connection')
+                let fileManager = document.querySelector('webrepl-file-manager')
+
+                const handleMessage = (msg) => {
+                    switch(state) {
+                        case 'connected':
+                            break;
+                        case 'listing':
+                            buffer += msg
+                            if (buffer.indexOf('ENDPRINT') != -1) {
+                                displayFiles()
+                            }
+                            break
+                        case 'removing':
+                            buffer += msg
+                            if (buffer.indexOf(`Type "help()" for more information.\r\n>>> `) != -1) {
+                                listFiles()
+                            }
+                            break
+                        case 'sending':
+                            if(msg instanceof ArrayBuffer) {
+                                listFiles()
+                            }
+                            break
+                        case 'loading':
+                        default:
+                            break
+                    }
+                }
+                const listFiles = () => {
+                    buffer = ''
+                    state = 'listing'
+                    let code = 'import os;print("STARTPRINT",os.listdir(),"ENDPRINT")'
+                    repl.execFromString(code)
+                }
+                const sendFile = (e) => {
+                    buffer = ''
+                    state = 'sending'
+                    let reader = new FileReader()
+                    reader.onload = (f) => {
+                        repl.sendFile(e.detail.name, f.target.result)
+                    }
+                    reader.readAsArrayBuffer(e.detail)
+                }
+                const onSent = (filename, filedata) => {
+                    listFiles()
+                }
+                const removeFile = (e) => {
+                    buffer = ''
+                    state = 'removing'
+                    repl.removeFile(e.detail)
+                }
+                const getFile = (e) => {
+                    buffer = ''
+                    state = 'loading'
+                    repl.loadFile(e.detail)
+                }
+                const displayFiles = () => {
+                    let out = buffer.substring(
+                        buffer.indexOf('STARTPRINT')+11,
+                        buffer.indexOf('ENDPRINT')
+                    )
+                    out = out.replace(/'/g, `"`)
+                    try {
+                        let files = JSON.parse(out)
+                        fileManager.loadFiles(files)
+                    } catch(e) { console.log(out, e) }
+                }
+
+                connectionForm.addEventListener('connect', (e) => {
+                    connect(e.detail.ip, e.detail.password)
+                        .then((connectedRepl) => {
+                            state = 'connected'
+                            repl = connectedRepl
+                            repl.onMessage = handleMessage.bind(this)
+                            repl.onSent = onSent
+                            repl.saveAs = saveAs
+                            connectionForm.setAttribute('connected', true)
+                            fileManager.setAttribute('connected', true)
+                            fileManager.addEventListener('list-files', listFiles)
+                            fileManager.addEventListener('send-file', sendFile)
+                            fileManager.addEventListener('remove-file', removeFile)
+                            fileManager.addEventListener('get-file', getFile)
+                        })
+                })
+            }
+        </script>
+    </body>
+</html>

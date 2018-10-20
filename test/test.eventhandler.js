@@ -103,8 +103,13 @@ describe('Handling Get/Put file', function() {
         assert.deepEqual(repl.ws.send.calls[0].arg, buffer.slice(0, 1024))
         assert.deepEqual(repl.ws.send.calls[1].arg, buffer.slice(1024, 2*1024))
         assert.deepEqual(repl.ws.send.calls[2].arg, buffer.slice(2*1024, 3*1024))
-
     })
+    // it('should call _finalPut', function() {
+    // TODO: should call save as with blob when calling _finalPut
+    // })
+    // it('should call saveAs with file blob when calling _finalPut', function() {
+    // TODO: should call save as with blob when calling _finalPut
+    // })
     it('should send emtpy `Uint8Array` when calling `_initGet`', function() {
         simple.mock(repl.ws, 'send', function() {})
         let rec = new Uint8Array(1)

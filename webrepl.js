@@ -77,11 +77,10 @@ class WebREPL {
     /**
      * Called when websocket connection is opened.
      * @example
-     * let repl = new WebREPL()
+     * let repl = new WebREPL({ autoconnect: true })
      * repl.onConnect = () => {
      *     console.log('connected')
      * }
-     * repl.connect()
      */
     onConnected() {}
 
@@ -89,11 +88,10 @@ class WebREPL {
      * Called on incoming string websocket messages.
      * @param {string} msg - Incoming message from websocket connection.
      * @example
-     * let repl = new WebREPL()
+     * let repl = new WebREPL({ autoconnect: true })
      * repl.onMessage = (msg) => {
      *     console.log('got message', msg)
      * }
-     * repl.connect()
      */
     onMessage(msg) {}
 
@@ -101,7 +99,7 @@ class WebREPL {
      * Called when websocket connection sends a blob file to be saved.
      * @param {blob} blob - Incoming file from websocket connection.
      * @example
-     * let repl = new WebREPL()
+     * let repl = new WebREPL({ autoconnect: true })
      * repl.saveAs = (blob) => {
      *     if(window.saveAs) {
      *         // From `FileSaver.js`
@@ -110,9 +108,26 @@ class WebREPL {
      *         console.log('File to save', blob)
      *     }
      * }
-     * repl.connect()
+     * repl.onConnected = (blob) => {
+     *     repl.loadFile('boot.py')
+     * }
      */
     saveAs(blob) {}
+
+    /**
+     * Called when sendFile is completed (put operation)
+     * @param {string} filename - File name.
+     * @param {ArrayBuffer} filedata - File content.
+     * @example
+     * let repl = new WebREPL({ autoconnect: true })
+     * repl.onSent = (filename, filedata) => {
+     *     console.log('sent file', filename, filedata)
+     * }
+     * repl.onConnected = () => {
+     *     repl.sendFile('foo.py', new ArrayBuffer())
+     * }
+     */
+    onSent(filename, filedata) {}
 
     /**
      * Sends a keyboard interrupt character (CTRL-C).
@@ -207,7 +222,7 @@ class WebREPL {
      * @example
      * let repl = new WebREPL({ autoconnect: true })
      * repl.onConnected = function() {
-     *     this.eval('print("hello world!")\')
+     *     this.eval('print("hello world!")\r')
      * }
      */
     eval(command) {
@@ -333,7 +348,7 @@ remove('${filename}')`
      */
     _decodeResp(data) {
         if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
-            var code = data[2] | (data[3] << 8)
+            let code = data[2] | (data[3] << 8)
             return code;
         } else {
             return -1;
@@ -350,6 +365,7 @@ remove('${filename}')`
     _handleMessage(event) {
         if (event.data instanceof ArrayBuffer) {
             let data = new Uint8Array(event.data)
+            console.log(data, this.binaryState)
             switch (this.binaryState) {
                 case 11:
                     this._initPut(data)
@@ -391,7 +407,6 @@ remove('${filename}')`
             for (let offset = 0; offset < this.sendFileData.length; offset += 1024) {
                 this.ws.send(this.sendFileData.slice(offset, offset + 1024))
             }
-            this.binaryState = 12
         }
     }
 
@@ -405,6 +420,7 @@ remove('${filename}')`
         // final response for put
         if (this._decodeResp(data) == 0) {
             console.log(`Sent ${this.sendFileName}, ${this.sendFileData.length} bytes`)
+            this.onSent(this.sendFileName, this.sendFileData)
         } else {
             console.log(`Failed sending ${this.sendFileName}`)
         }
@@ -421,7 +437,7 @@ remove('${filename}')`
         // first response for get
         if (this._decodeResp(data) == 0) {
             this.binaryState = 22
-            var rec = new Uint8Array(1)
+            let rec = new Uint8Array(1)
             rec[0] = 0
             this.ws.send(rec)
         }
@@ -437,7 +453,7 @@ remove('${filename}')`
      */
     _processGet(data) {
         // file data
-        var sz = data[0] | (data[1] << 8)
+        let sz = data[0] | (data[1] << 8)
         if (data.length == 2 + sz) {
             // we assume that the data comes in single chunks
             if (sz == 0) {
@@ -445,12 +461,12 @@ remove('${filename}')`
                 this.binaryState = 23
             } else {
                 // accumulate incoming data to this.getFileData
-                var new_buf = new Uint8Array(this.getFileData.length + sz)
+                let new_buf = new Uint8Array(this.getFileData.length + sz)
                 new_buf.set(this.getFileData)
                 new_buf.set(data.slice(2), this.getFileData.length)
                 this.getFileData = new_buf
                 console.log('Getting ' + this.getFileName + ', ' + this.getFileData.length + ' bytes')
-                var rec = new Uint8Array(1)
+                let rec = new Uint8Array(1)
                 rec[0] = 0
                 this.ws.send(rec)
             }
