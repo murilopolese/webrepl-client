@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Text editor</title>
+    </head>
+    <body>
+        <h1>Text Editor</h1>
+        <webrepl-connection></webrepl-connection>
+        <webrepl-editor code="# Write MicroPython here&#10;print('hello world!')"></webrepl-editor>
+
+        <script type="module">
+            // import 'https://unpkg.com/@webcomponents/custom-elements'
+            import './custom-elements.min.js'
+            import './components/webrepl-connection.js'
+            import './components/webrepl-editor.js'
+            import { WebREPL } from '../webrepl.js'
+            let repl
+
+            window.onload = () => {
+                let connectionForm = document.querySelector('webrepl-connection')
+                let editor = document.querySelector('webrepl-editor')
+                connectionForm.addEventListener('connect', (e) => {
+                    repl = new WebREPL({
+                        ip: e.detail.ip,
+                        password: e.detail.password,
+                        autoConnect: true,
+                        autoAuth: true
+                    })
+                    repl.on('authenticated', () => {
+                        editor.setAttribute('connected', true)
+                    })
+                    repl.on('disconnected', () => {
+                        editor.setAttribute('connected', false)
+                    })
+                    editor.addEventListener('run', (e) => {
+                        console.log('Running code')
+                        repl.execFromString(e.detail, 30)
+                            .then(() => {
+                                console.log('Code executed')
+                            })
+                    })
+                    editor.addEventListener('stop', () => {
+                        console.log('Sending stop')
+                        repl.sendStop()
+                    })
+                })
+            }
+        </script>
+    </body>
+</html>
