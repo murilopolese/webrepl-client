@@ -42,7 +42,7 @@ class WebREPL extends EventEmitter {
      * @property {boolean} [autoConnect=false] - Flags if should connect automatically when instantiating WebREPL class.
      * @property {boolean} [autoAuth=false] - Flags if should authenticate the webrepl session automatically.
      * @property {number} [timeout=5000] - How long, in milliseconds, should wait for response from webrepl.
-     * @property {string} outputBuffer - Output buffer.
+     * @property {Uint8Array} fileBuffer - Buffer for files being requested by `loadFile`.
      * @property {WebSocket} ws - WebSocket connection with board.
      * @example
      * let repl = new WebREPL({
@@ -69,10 +69,7 @@ class WebREPL extends EventEmitter {
         this.autoConnect = !!opts.autoConnect
         this.timeout = opts.timeout || 5000
 
-        this.sendFileName = ''
-        this.sendFileData = new ArrayBuffer()
-        this.getFileName = ''
-        this.getFileData = new ArrayBuffer()
+        this.fileBuffer = new Uint8Array()
 
         if (this.autoConnect) {
             this.connect()
@@ -316,7 +313,6 @@ class WebREPL extends EventEmitter {
                 clearTimeout(timeout)
                 let response = new Uint8Array(data)
                 if (this._decode_response(response) == 0) {
-                    // Unregister itself
                     this.removeListener('data', initialResponse)
                     // Register listener for final response
                     this.on('data', finalResponse)
@@ -329,16 +325,12 @@ class WebREPL extends EventEmitter {
             let finalResponse = (data) => {
                 let response = new Uint8Array(data)
                 if (this._decode_response(response) == 0) {
-                    // Unregister itself
                     this.removeListener('data', finalResponse)
-                    // Resolve promise
                     resolve()
                 }
             }
-
             // Register listener for initial response
             this.on('data', initialResponse)
-
             // Send request to open file
             let rec = this._getPutBinary(filename, putFileData.length)
             this.ws.send(rec)
@@ -386,7 +378,7 @@ class WebREPL extends EventEmitter {
      */
     loadFile(filename) {
         return new Promise((resolve, reject) => {
-            let fileBuffer = new Uint8Array()
+            this.fileBuffer = new Uint8Array()
             let timeout = setTimeout(() => {
                 reject(new Error('Timeout: Could not get file.'))
             }, this.timeout)
@@ -407,17 +399,18 @@ class WebREPL extends EventEmitter {
                     // we assume that the data comes in single chunks
                     if (sz != 0) {
                         // accumulate incoming data to fileBuffer
-                        let newBuffer = new Uint8Array(fileBuffer.length + sz)
-                        newBuffer.set(fileBuffer)
-                        newBuffer.set(response.slice(2), fileBuffer.length)
-                        fileBuffer = newBuffer
+                        let newBuffer = new Uint8Array(this.fileBuffer.length + sz)
+                        newBuffer.set(this.fileBuffer)
+                        newBuffer.set(response.slice(2), this.fileBuffer.length)
+                        this.fileBuffer = newBuffer
                         let rec = new Uint8Array(1)
                         rec[0] = 0
                         this.ws.send(rec)
                     }
                 } else {
+                    // Done receiving
                     this.removeListener('data', onFileData)
-                    resolve(fileBuffer)
+                    resolve(this.fileBuffer)
                 }
             }
             let rec = this._getGetBinary(filename)
