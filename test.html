@@ -1,26 +1,27 @@
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Mocha Tests</title>
-  <link href="https://unpkg.com/mocha@5.2.0/mocha.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <title>Mocha Tests</title>
+    <link href="node_modules/mocha/mocha.css" rel="stylesheet" />
 </head>
 <body>
-  <div id="mocha"></div>
+    <div id="mocha"></div>
 
-  <script src="node_modules/simple-mock/index.js"></script>
-  <script src="node_modules/chai/chai.js"></script>
-  <script src="node_modules/mocha/mocha.js"></script>
-  <script src="webrepl.js"></script>
+    <script type="module">
+        import './node_modules/simple-mock/index.js'
+        import './node_modules/chai/chai.js'
+        import './node_modules/mocha/mocha.js'
 
-  <script>mocha.setup('bdd')</script>
-  <script>window.assert = chai.assert</script>
-  <script src="test/test.init.js"></script>
-  <script src="test/test.connection.js"></script>
-  <script src="test/test.repl.js"></script>
-  <script src="test/test.eventhandler.js"></script>
-  <script>
-    mocha.checkLeaks();
-    mocha.run();
-  </script>
+        mocha.setup('bdd')
+    </script>
+    <script type="module">
+        window.assert = chai.assert
+        import './test/test.init.js'
+        import './test/test.connection.js'
+        import './test/test.repl.js'
+
+        mocha.checkLeaks()
+        mocha.run()
+    </script>
 </body>
 </html>

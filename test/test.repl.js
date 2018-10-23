@@ -1,10 +1,13 @@
-let repl
+import { WebREPL } from '../webrepl.js'
+
 describe('REPL commands', function() {
+    let repl
     beforeEach(function() {
         simple.restore()
         simple.mock(window, 'WebSocket', function() {})
-        repl = new WebREPL({ autoconnect: true })
+        repl = new WebREPL({ autoConnect: true })
     })
+    
     it('should eval keyboard interrupt when calling `sendStop`', function() {
         simple.mock(repl, 'eval', function() {})
         repl.sendStop()
@@ -21,34 +24,71 @@ describe('REPL commands', function() {
     })
     it('should eval characters to enter raw repl when calling `enterRawRepl`', function() {
         simple.mock(repl, 'eval', function() {})
-        repl.enterRawRepl()
+        repl.enterRawRepl().catch(() => {})
         assert(repl.eval.called)
         assert.equal(repl.eval.lastCall.arg, repl.ENTER_RAW_REPL)
     })
+    it('should resolve `enterRawRepl` after webrepl printing `raw REPL; CTRL-B to exit`', function(done) {
+        simple.mock(repl, 'eval', function() {})
+        repl.enterRawRepl().then(done)
+        repl.on('connected', () => {
+            repl._handleMessage({ data: 'raw REPL; CTRL-B to exit' })
+        })
+        repl.ws.onopen()
+    })
+    it('should paste code and `EXECUTE_RAW_REPL` character when calling `execRaw`', function() {
+        simple.mock(repl, 'eval', function() {})
+        let code = `print('hello world!')`
+        repl.execRaw(code).catch(() => {})
+        assert.equal(repl.eval.callCount, 2)
+        assert.equal(repl.eval.calls[0].arg, code)
+        assert.equal(repl.eval.calls[1].arg, repl.EXECUTE_RAW_REPL)
+    })
+    it('should call eval as many times as lines in the code plus `EXECUTE_RAW_REPL` when calling `execRaw` with interval', function(done) {
+        simple.mock(repl, 'eval', function() {})
+        let code = `print('hello world!')\nprint('hello world!')\nprint('hello world!')\nprint('hello world!')\n`
+        repl.execRaw(code, 1).then(() => {
+            assert.equal(repl.eval.callCount, code.split('\n').length+1)
+            done()
+        })
+        setTimeout(() => {
+            repl._handleMessage({ data: 'OK' })
+        }, code.split('\n').length+1)
+    })
     it('should eval characters to exit raw repl when calling `exitRawRepl`', function() {
         simple.mock(repl, 'eval', function() {})
-        repl.exitRawRepl()
+        repl.exitRawRepl().catch(() => {})
         assert(repl.eval.called)
         assert.equal(repl.eval.lastCall.arg, repl.EXIT_RAW_REPL)
     })
-    it('should eval command appending a line break `/r`', function() {
+    it('should resolve `exitRawRepl` after webrepl printing `Type "help()" for more information.`', function(done) {
+        simple.mock(repl, 'eval', function() {})
+        repl.exitRawRepl().then(done)
+        repl.on('connected', () => {
+            repl._handleMessage({ data: 'Type "help()" for more information.' })
+        })
+        repl.ws.onopen()
+    })
+    it('should eval command appending a line break `/r` when calling `exec`', function() {
         simple.mock(repl, 'eval', function() {})
         repl.exec('print("hello world")')
         assert(repl.eval.called)
         assert.equal(repl.eval.lastCall.arg, 'print("hello world")\r')
     })
-    it('should eval code on raw repl when calling `execFromString`', function() {
+    it('should resolve `execFromString` after calling `sendStop`, `enterRawRepl`, `execRaw` and `exitRawRepl` in sequence', function(done) {
         let code = `for i in range(0, 10):\n    print('hello world', i)\n`
         simple.mock(repl, 'eval', function() {})
         simple.mock(repl, 'sendStop', function() {})
-        simple.mock(repl, 'enterRawRepl', function() {})
-        simple.mock(repl, 'exitRawRepl', function() {})
-        repl.execFromString(code)
-        assert(repl.sendStop.called)
-        assert(repl.enterRawRepl.called)
-        assert(repl.eval.called)
-        assert.equal(repl.eval.lastCall.arg, code)
-        assert(repl.exitRawRepl.called)
+        simple.mock(repl, 'enterRawRepl', function() {}).resolveWith()
+        simple.mock(repl, 'execRaw', function() {}).resolveWith()
+        simple.mock(repl, 'exitRawRepl', function() {}).resolveWith()
+        repl.execFromString(code).then(() => {
+            assert(repl.sendStop.called)
+            assert(repl.enterRawRepl.called)
+            assert(repl.execRaw.called)
+            assert(repl.exitRawRepl.called)
+            done()
+        })
     })
     it('should send command to websocket connection when calling `eval`', function() {
         simple.mock(repl.ws, 'send')
@@ -56,112 +96,105 @@ describe('REPL commands', function() {
         assert(repl.ws.send.called)
         assert.equal(repl.ws.send.lastCall.arg, 'print("hello world")\r')
     })
-    it('should set internal properties when calling `sendFile`', function(done) {
-        simple.mock(repl.ws, 'send', function() {
-            assert.equal(repl.sendFileName, filename)
-            assert.equal(repl.sendFileData, buffer)
-            done()
-        })
-        let filename = 'foo.py'
-        let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
-        repl.sendFile(filename, buffer)
+    it('should return `0` when decoding valid ArrayBuffer response', () => {
+        throw new Error('Must implement')
     })
-    it('should set correct `binaryState` when calling `sendFile`', function(done) {
-        simple.mock(repl.ws, 'send', function() {}).callFn(function() {
-            assert.equal(repl.binaryState, 11)
-            done()
-        })
-        let filename = 'foo.py'
-        let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
-        repl.sendFile(filename, buffer)
+    it('should return `-1` when decoding invalid ArrayBuffer response', () => {
+        throw new Error('Must implement')
     })
-    it('should get a Uint8Array correctly setup when calling `_getPutBinary`', function() {
-        simple.mock(repl.ws, 'send', function() {})
-        let fname = 'foo.py'
-        let fsize = 'print("hello world")'.length
-        let rec = repl._getPutBinary(fname, fsize)
-        assert.instanceOf(rec, Uint8Array)
-        assert.equal(rec.length, 82)
-        assert.equal(rec[0], 'W'.charCodeAt(0))
-        assert.equal(rec[1], 'A'.charCodeAt(0))
-        assert.equal(rec[2], 1)
-        assert.equal(rec[12], fsize & 0xff)
-        assert.equal(rec[13], (fsize >> 8) & 0xff)
-        assert.equal(rec[14], (fsize >> 16) & 0xff)
-        assert.equal(rec[15], (fsize >> 24) & 0xff)
-        assert.equal(rec[16], fname.length & 0xff)
-        assert.equal(rec[17], (fname.length >> 8) & 0xff)
-        for (let i = 0; i < 64; ++i) {
-            if (i < fname.length) {
-                assert.equal(rec[18 + i], fname.charCodeAt(i))
-            } else {
-                assert.equal(rec[18 + i], 0)
+
+    describe('Sending file', function() {
+        it('should timeout if webrepl does not send response within `timeout`', function() {
+            throw new Error('Must implement')
+        })
+        it('should send chunks of file after receiving first `ArrayBuffer` from repl', function() {
+            throw new Error('Must implement')
+        })
+        it('should resolve after receiving two `ArrayBuffer`s from repl', function(done) {
+            simple.mock(repl.ws, 'send', function() {})
+            simple.mock(repl, '_decode_response').returnWith(0)
+            repl.sendFile('foo.py', new Uint8Array()).then(done)
+            repl._handleMessage({ data: new ArrayBuffer() })
+            repl._handleMessage({ data: new ArrayBuffer() })
+        })
+        it('should get a Uint8Array correctly populated when calling `_getPutBinary`', function() {
+            simple.mock(repl.ws, 'send', function() {})
+            let fname = 'foo.py'
+            let fsize = 'print("hello world")'.length
+            let rec = repl._getPutBinary(fname, fsize)
+            assert.instanceOf(rec, Uint8Array)
+            assert.equal(rec.length, 82)
+            assert.equal(rec[0], 'W'.charCodeAt(0))
+            assert.equal(rec[1], 'A'.charCodeAt(0))
+            assert.equal(rec[2], 1)
+            assert.equal(rec[12], fsize & 0xff)
+            assert.equal(rec[13], (fsize >> 8) & 0xff)
+            assert.equal(rec[14], (fsize >> 16) & 0xff)
+            assert.equal(rec[15], (fsize >> 24) & 0xff)
+            assert.equal(rec[16], fname.length & 0xff)
+            assert.equal(rec[17], (fname.length >> 8) & 0xff)
+            for (let i = 0; i < 64; ++i) {
+                if (i < fname.length) {
+                    assert.equal(rec[18 + i], fname.charCodeAt(i))
+                } else {
+                    assert.equal(rec[18 + i], 0)
+                }
             }
-        }
-    })
-    it('should send correct binary data when calling `sendFile`', function(done) {
-        simple.mock(repl.ws, 'send', function(data) {
-            assert.deepEqual(data, repl._getPutBinary(filename, buffer.length))
-            done()
         })
-        let filename = 'foo.py'
-        let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
-        repl.sendFile(filename, buffer)
+        it('should send correct binary data', function(done) {
+            simple.mock(repl.ws, 'send', function(data) {
+                assert.deepEqual(data, repl._getPutBinary(filename, buffer.length))
+                done()
+            })
+            let filename = 'foo.py'
+            let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
+            repl.sendFile(filename, buffer).catch(() => {})
+        })
     })
 
-
-
-    it('should set internal properties when calling `loadFile`', function(done) {
-        simple.mock(repl.ws, 'send', function() {
-            assert.equal(repl.getFileName, filename)
-            done()
+    describe('Requesting file', function() {
+        it('should timeout if webrepl does not send response within `timeout`', function() {
+            throw new Error('Must implement')
         })
-        let filename = 'foo.py'
-        repl.loadFile(filename)
-    })
-    it('should set correct `binaryState` when calling `loadFile`', function(done) {
-        simple.mock(repl.ws, 'send', function() {}).callFn(function() {
-            assert.equal(repl.binaryState, 21)
-            done()
+        it('should send send an empty `Uint8Array` to webrepl after receiving first `ArrayBuffer` response', function() {
+            throw new Error('Must implement')
         })
-        let filename = 'foo.py'
-        repl.loadFile(filename)
-    })
-    it('should get a Uint8Array correctly setup when calling `_getGetBinary`', function() {
-        simple.mock(repl.ws, 'send', function() {})
-        let fname = 'foo.py'
-        let rec = repl._getGetBinary(fname)
-        assert.instanceOf(rec, Uint8Array)
-        assert.equal(rec.length, 82)
-        assert.equal(rec[0], 'W'.charCodeAt(0))
-        assert.equal(rec[1], 'A'.charCodeAt(0))
-        assert.equal(rec[2], 2)
-        assert.equal(rec[16], fname.length & 0xff)
-        assert.equal(rec[17], (fname.length >> 8) & 0xff)
-        for (let i = 0; i < 64; ++i) {
-            if (i < fname.length) {
-                assert.equal(rec[18 + i], fname.charCodeAt(i))
-            } else {
-                assert.equal(rec[18 + i], 0)
+        it('should append `Uint8Array` data to `fileBuffer` when receiving initial `ArrayBuffer`', function() {
+            throw new Error('Must implement')
+        })
+        it('should send empty `Uint8Array` to request another chunk from the file', function() {
+            throw new Error('Must implement')
+        })
+        it('should resolve with `fileBuffer` when done receiving file data', function() {
+            throw new Error('Must implement')
+        })
+        it('should get a Uint8Array correctly populated when calling `_getGetBinary`', function() {
+            simple.mock(repl.ws, 'send', function() {})
+            let fname = 'foo.py'
+            let rec = repl._getGetBinary(fname)
+            assert.instanceOf(rec, Uint8Array)
+            assert.equal(rec.length, 82)
+            assert.equal(rec[0], 'W'.charCodeAt(0))
+            assert.equal(rec[1], 'A'.charCodeAt(0))
+            assert.equal(rec[2], 2)
+            assert.equal(rec[16], fname.length & 0xff)
+            assert.equal(rec[17], (fname.length >> 8) & 0xff)
+            for (let i = 0; i < 64; ++i) {
+                if (i < fname.length) {
+                    assert.equal(rec[18 + i], fname.charCodeAt(i))
+                } else {
+                    assert.equal(rec[18 + i], 0)
+                }
             }
-        }
-    })
-    it('should send correct binary data when calling `sendFile`', function(done) {
-        simple.mock(repl.ws, 'send', function(data) {
-            assert.deepEqual(data, repl._getGetBinary(filename))
-            done()
         })
-        let filename = 'foo.py'
-        repl.loadFile(filename)
-    })
-    it('should generate and execute code to remove file when calling `removeFile`', function(done) {
-        simple.mock(repl, 'execFromString').callFn((data) => {
-            let expectedCode = `from os import remove
-remove('${filename}')`
-            assert.equal(data, expectedCode)
-            done()
+        it('should send correct binary data when calling `sendFile`', function(done) {
+            simple.mock(repl.ws, 'send', function(data) {
+                assert.deepEqual(data, repl._getGetBinary(filename))
+                done()
+            })
+            let filename = 'foo.py'
+            repl.loadFile(filename)
         })
-        let filename = 'foo.py'
-        repl.removeFile(filename)
     })
+
 })
