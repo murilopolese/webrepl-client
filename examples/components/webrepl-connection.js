@@ -1,9 +1,6 @@
 import { BaseComponent } from './base-component.js'
 
 class ConnectionComponent extends BaseComponent {
-    constructor() {
-        super()
-    }
     static get observedAttributes() {
         return ['connected', 'ip', 'password']
     }

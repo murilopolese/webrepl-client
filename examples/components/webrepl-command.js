@@ -1,9 +1,6 @@
 import { BaseComponent } from './base-component.js'
 
 class CommandComponent extends BaseComponent {
-    constructor() {
-        super()
-    }
     static get observedAttributes() {
         return ['command', 'connected']
     }
