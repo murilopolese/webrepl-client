@@ -16,6 +16,7 @@ This library extracts most logic to interact with MicroPython's WebREPL from [th
 - Enter and exit "raw repl" mode
 - Send keyboard interrupt and software reset
 - "Raw repl" and file operations return promises.
+- Optional interval between lines of code on `execFromString` necessary for the ESP32 implementation of the WebREPL protocol.
 
 ### Documentation and examples
 
