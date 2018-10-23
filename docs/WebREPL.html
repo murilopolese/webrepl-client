@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>WebREPL<span class="signature">(opts)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>WebREPL<span class="signature">(opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="WebREPL"><span class="type-signature"></span>new WebREPL<span class="signature">(opts)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="WebREPL"><span class="type-signature"></span>new WebREPL<span class="signature">(opts<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -73,6 +73,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -98,10 +100,20 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">
+            <td class="description last">Initialization option
                 <h6>Properties</h6>
                 
 
@@ -115,6 +127,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -123,29 +137,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>binaryState</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
     
 
         <tr>
@@ -163,10 +154,20 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Ip address to connect to.</td>
         </tr>
 
     
@@ -186,109 +187,27 @@
             </td>
 
             
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>sendFileName</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>sendFileData</code></td>
-            
-
-            <td class="type">
-            
+                    &lt;optional><br>
                 
-<span class="param-type">ArrayBuffer</span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>getFileName</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">string</span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>getFileData</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
+                </td>
             
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Password to authenticate webrepl session.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>autoconnect</code></td>
+                <td class="name"><code>autoConnect</code></td>
             
 
             <td class="type">
@@ -301,10 +220,86 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Flags if should connect automatically when instantiating WebREPL class.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>autoAuth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Flags if should authenticate the webrepl session automatically.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>timeout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">How long, in milliseconds, should wait for response from webrepl.</td>
         </tr>
 
     
@@ -353,77 +348,7 @@
 
         <tr>
             
-                <td class="name"><code>ws</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">WebSocket</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">WebSocket connection with board.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opts.binaryState</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opts.ip</code></td>
+                <td class="name"><code>ip</code></td>
             
 
             <td class="type">
@@ -453,14 +378,14 @@
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">Ip address to connect to.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opts.password</code></td>
+                <td class="name"><code>password</code></td>
             
 
             <td class="type">
@@ -490,162 +415,14 @@
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">Password to authenticate webrepl session.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opts.sendFileName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    ''
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opts.sendFileData</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    {}
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opts.getFileName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    ''
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opts.getFileData</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    {}
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>opts.autoconnect</code></td>
+                <td class="name"><code>autoConnect</code></td>
             
 
             <td class="type">
@@ -675,7 +452,147 @@
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">Flags if should connect automatically when instantiating WebREPL class.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>autoAuth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Flags if should authenticate the webrepl session automatically.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>timeout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    5000
+                
+                </td>
+            
+
+            <td class="description last">How long, in milliseconds, should wait for response from webrepl.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>outputBuffer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Output buffer.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ws</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">WebSocket</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">WebSocket connection with board.</td>
         </tr>
 
     
@@ -714,7 +631,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line32">line 32</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -746,7 +663,9 @@
     <pre class="prettyprint"><code>let repl = new WebREPL({
     ip: '192.168.1.4',
     password: 'micropythoN',
-    autoconnect: true
+    autoConnect: true,
+    autoAuth: true,
+    timeout: 5000
 })</code></pre>
 
 
@@ -770,1368 +689,6 @@
 
     
         <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_decodeResp"><span class="type-signature"></span>_decodeResp<span class="signature">(data)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Decode ArrayBuffer message from websocket.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming ArrayBuffer coming from websocket</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line334">line 334</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_finalGet"><span class="type-signature"></span>_finalGet<span class="signature">(data)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Method called when a specific ArrayBuffer data is received from websocket
-and the binaryState is 23. This means the WebREPL class has finished to
-load/process the requested file and will set the binaryState back to 0
-but also call saveAs with a Blob instance containing the file name and
-data.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming ArrayBuffer data from websocket</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line470">line 470</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_finalPut"><span class="type-signature"></span>_finalPut<span class="signature">(data)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Method called when a specific ArrayBuffer data is received from websocket
-and the binaryState is 12. This means the WebREPL class has finished the
-put request and will set the binaryState back to 0.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming ArrayBuffer data from websocket</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line404">line 404</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_getGetBinary"><span class="type-signature"></span>_getGetBinary<span class="signature">(filename)</span><span class="type-signature"> &rarr; {Uint8Array}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Given a filename, get a `Uint8Array` with fixed length and specific bits
-set to send a "get" request to MicroPython.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>filename</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">File name</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line295">line 295</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Uint8Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_getPutBinary"><span class="type-signature"></span>_getPutBinary<span class="signature">(filename, filesize)</span><span class="type-signature"> &rarr; {Uint8Array}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Given a filename and the file size, get a `Uint8Array` with fixed length
-and specific bits set to send a "put" request to MicroPython.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>filename</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">File name</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>filesize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Length of ArrayBuffer containing file data</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line248">line 248</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Uint8Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_handleMessage"><span class="type-signature"></span>_handleMessage<span class="signature">(event)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Handles incoming data from websocket based on the data and current
-binaryState the WebREPL currently is set to.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming event object from websocket connection.
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-|
-
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Data sent by MicroPython
-through websocket.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line350">line 350</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_initGet"><span class="type-signature"></span>_initGet<span class="signature">(data)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Method called when getting a specific ArrayBuffer data from websocket and
-binaryState is 21.  This put the WebREPL class in a state ready to
-process file data comming from the websocket.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming ArrayBuffer data from websocket</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line420">line 420</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_initPut"><span class="type-signature"></span>_initPut<span class="signature">(data)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Method called when a specific ArrayBuffer data is received from websocket
-and the binaryState is 11. This will set the binaryState to 12 and will
-send the file data through websocket.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming ArrayBuffer data from websocket</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line387">line 387</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="_processGet"><span class="type-signature"></span>_processGet<span class="signature">(data)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Method called when getting a specific ArrayBuffer data from websocket and
-binaryState is 22.  This will process the incoming data coming from the
-websocket appending it to the getFileData. Once the it gets and empty
-data it sets the binaryState to 23, putting the WebREPL class in a state
-ready to handle the file data.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ArrayBuffer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming ArrayBuffer data from websocket</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line438">line 438</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         
             
@@ -2193,7 +750,7 @@ and for parsing incoming messages.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line58">line 58</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -2285,7 +842,7 @@ repl.connect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line73">line 73</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -2325,7 +882,7 @@ repl.disconnect()</code></pre>
     
 
     
-    <h4 class="name" id="enterRawRepl"><span class="type-signature"></span>enterRawRepl<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="enterRawRepl"><span class="type-signature"></span>enterRawRepl<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -2377,7 +934,7 @@ repl.disconnect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line155">line 155</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -2400,18 +957,42 @@ repl.disconnect()</code></pre>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Resolves when board enters in raw repl mode, rejects if timeout.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
-repl.onConnected = function() {
-     this.enterRawRepl()
-     // Eval or execute code here
-     this.exitRawRepl()
-}</code></pre>
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
+repl.on('authenticated', function() {
+    repl.enterRawRepl()
+        .then(() => {
+            // RAW REPL
+        })
+    })
+})</code></pre>
 
 
 
@@ -2522,7 +1103,7 @@ repl.onConnected = function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line213">line 213</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line279">line 279</a>
     </li></ul></dd>
     
 
@@ -2551,10 +1132,10 @@ repl.onConnected = function() {
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
-repl.onConnected = function() {
-    this.eval('print("hello world!")\')
-}</code></pre>
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
+repl.on('authenticated', function() {
+    this.eval('print("hello world!")\r')
+})</code></pre>
 
 
 
@@ -2665,7 +1246,7 @@ repl.onConnected = function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line182">line 182</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line292">line 292</a>
     </li></ul></dd>
     
 
@@ -2694,10 +1275,10 @@ repl.onConnected = function() {
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
-repl.onConnected = function() {
-    this.exec('print("hello world!")')
-}</code></pre>
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
+repl.on('authenticated', function() {
+    repl.exec('print("hello world!")')
+})</code></pre>
 
 
 
@@ -2707,7 +1288,7 @@ repl.onConnected = function() {
     
 
     
-    <h4 class="name" id="execFromString"><span class="type-signature"></span>execFromString<span class="signature">(code)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="execFromString"><span class="type-signature"></span>execFromString<span class="signature">(code, interval)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -2715,7 +1296,7 @@ repl.onConnected = function() {
 
 
 <div class="description">
-    Execute a string containing lines of code separated by `\n` in RAW REPL
+    Execute a string containing lines of code separated by `\n` in raw repl
 mode. It will send a keyboard interrupt before entering RAW REPL mode.
 </div>
 
@@ -2772,6 +1353,29 @@ mode. It will send a keyboard interrupt before entering RAW REPL mode.
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>interval</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Interval in milliseconds between the lines of code.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2809,7 +1413,7 @@ mode. It will send a keyboard interrupt before entering RAW REPL mode.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line197">line 197</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line263">line 263</a>
     </li></ul></dd>
     
 
@@ -2832,17 +1436,41 @@ mode. It will send a keyboard interrupt before entering RAW REPL mode.
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Resolves when exits raw repl mode.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
-let code = `from time import sleep\nwhile True:\n    sleep(1)`
-repl.onConnected = function() {
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
+let code = `for i in range(0, 10):\n    print(i)`
+repl.on('authenticated', function() {
     this.execFromString(code)
-}</code></pre>
+        .then(() => console.log('code executed'))
+
+})</code></pre>
 
 
 
@@ -2852,7 +1480,200 @@ repl.onConnected = function() {
     
 
     
-    <h4 class="name" id="exitRawRepl"><span class="type-signature"></span>exitRawRepl<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="execRaw"><span class="type-signature"></span>execRaw<span class="signature">(code, interval)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Evaluate the code on raw repl line by line and resolve promise when it
+gets executed (prints "OK"). If `interval` is passed, wait that amount
+of time before evaluating next line (important for ESP32 WebREPL).
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>code</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">String containing lines of code separated by `\n`.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interval</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Interval in milliseconds between the lines of code.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line196">line 196</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Resolves when code is pasted and executed (got `OK` from repl) on raw repl mode.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
+let code = `for i in range(0, 10):\n    print(i)`
+repl.on('authenticated', function() {
+    this.enterRawRepl()
+        .then(() => this.execRaw(code, 30))
+        .then(() => this.exitRawRepl(code))
+})</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="exitRawRepl"><span class="type-signature"></span>exitRawRepl<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -2904,7 +1725,7 @@ repl.onConnected = function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line169">line 169</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line234">line 234</a>
     </li></ul></dd>
     
 
@@ -2927,18 +1748,40 @@ repl.onConnected = function() {
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Resolves when exits raw repl mode (Gets MicroPython booting message).
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
-repl.onConnected = function() {
-     this.enterRawRepl()
-     // Eval or execute code here
-     this.exitRawRepl()
-}</code></pre>
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
+repl.on('authenticated', function() {
+    repl.enterRawRepl()
+        .then(() => repl.execRaw('print("hello world!")'))
+        .then(() => repl.exitRawRepl())
+})</code></pre>
 
 
 
@@ -2948,7 +1791,7 @@ repl.onConnected = function() {
     
 
     
-    <h4 class="name" id="loadFile"><span class="type-signature"></span>loadFile<span class="signature">(filename)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="loadFile"><span class="type-signature"></span>loadFile<span class="signature">(filename)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -3049,7 +1892,7 @@ repl.onConnected = function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line279">line 279</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line387">line 387</a>
     </li></ul></dd>
     
 
@@ -3072,13 +1915,35 @@ repl.onConnected = function() {
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Resolves with `Uint8Array` containing the data from requested file.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
 let filename = 'foo.py'
 repl.saveAs = (blob) => {
     console.log('File content', blob)
@@ -3093,537 +1958,7 @@ repl.loadFile(filename)</code></pre>
     
 
     
-    <h4 class="name" id="onConnected"><span class="type-signature"></span>onConnected<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Called when websocket connection is opened.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line86">line 86</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>let repl = new WebREPL()
-repl.onConnect = () => {
-    console.log('connected')
-}
-repl.connect()</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="onMessage"><span class="type-signature"></span>onMessage<span class="signature">(msg)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Called on incoming string websocket messages.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>msg</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming message from websocket connection.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line98">line 98</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>let repl = new WebREPL()
-repl.onMessage = (msg) => {
-    console.log('got message', msg)
-}
-repl.connect()</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="removeFile"><span class="type-signature"></span>removeFile<span class="signature">(filename)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Remove file from MicroPython's filesystem.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>filename</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">File name</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line323">line 323</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
-let filename = 'foo.py'
-repl.removeFile(filename)</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="saveAs"><span class="type-signature"></span>saveAs<span class="signature">(blob)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Called when websocket connection sends a blob file to be saved.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>blob</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">blob</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Incoming file from websocket connection.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line115">line 115</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>let repl = new WebREPL()
-repl.saveAs = (blob) => {
-    if(window.saveAs) {
-        // From `FileSaver.js`
-        saveAs(blob)
-    } else {
-        console.log('File to save', blob)
-    }
-}
-repl.connect()</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="sendFile"><span class="type-signature"></span>sendFile<span class="signature">(filename, buffer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="sendFile"><span class="type-signature"></span>sendFile<span class="signature">(filename, putFileData)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -3691,7 +2026,7 @@ repl.connect()</code></pre>
 
         <tr>
             
-                <td class="name"><code>buffer</code></td>
+                <td class="name"><code>putFileData</code></td>
             
 
             <td class="type">
@@ -3707,8 +2042,7 @@ repl.connect()</code></pre>
 
             
 
-            <td class="description last">Typed array buffer with content of file
-to be sent.</td>
+            <td class="description last">Typed array buffer with content of file to be sent.</td>
         </tr>
 
     
@@ -3749,7 +2083,7 @@ to be sent.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line229">line 229</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line310">line 310</a>
     </li></ul></dd>
     
 
@@ -3772,16 +2106,40 @@ to be sent.</td>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Resolves when file is sent.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
 let filename = 'foo.py'
 let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
-repl.sendFile(filename, buffer)</code></pre>
+repl.on('authenticated', function() {
+    repl.sendFile(filename, buffer)
+})</code></pre>
 
 
 
@@ -3843,7 +2201,7 @@ repl.sendFile(filename, buffer)</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line126">line 126</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -3872,11 +2230,11 @@ repl.sendFile(filename, buffer)</code></pre>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
 let stopButton = document.querySelector('#stop-code')
-repl.onConnected = () => {
-    stopButton.addEventListener('click', repl.sendStop.bind(this))
-}</code></pre>
+repl.on('authenticated', () => {
+    stopButton.addEventListener('click', repl.sendStop.bind(repl))
+})</code></pre>
 
 
 
@@ -3939,7 +2297,7 @@ perform a software reset on the board (CTRL-D).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line140">line 140</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line146">line 146</a>
     </li></ul></dd>
     
 
@@ -3968,11 +2326,11 @@ perform a software reset on the board (CTRL-D).
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>let repl = new WebREPL({ autoconnect: true })
+    <pre class="prettyprint"><code>let repl = new WebREPL({ autoConnect: true })
 let resetButton = document.querySelector('#reset-button')
-repl.onConnected = function() {
-    resetButton.addEventListener('click', repl.softReset.bind(this))
-}</code></pre>
+repl.on('authenticated', function() {
+    resetButton.addEventListener('click', (e) => repl.softReset())
+})</code></pre>
 
 
 
@@ -3981,6 +2339,556 @@ repl.onConnected = function() {
 
     
 
+    
+        <h3 class="subsection-title">Events</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:authenticated">authenticated</h4>
+    
+
+    
+
+
+
+<div class="description">
+    WebREPL authenticated session with success.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:connected">connected</h4>
+    
+
+    
+
+
+
+<div class="description">
+    WebSocket connection is opened.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:data">data</h4>
+    
+
+    
+
+
+
+<div class="description">
+    `ArrayBuffer` coming from the webrepl.
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">ArrayBuffer</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:disconnected">disconnected</h4>
+    
+
+    
+
+
+
+<div class="description">
+    WebSocket connection is closed.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line6">line 6</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:error">error</h4>
+    
+
+    
+
+
+
+<div class="description">
+    Incoming WebSocket connection error or internal WebREPL error.
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">ErrorEvent</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line10">line 10</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:output">output</h4>
+    
+
+    
+
+
+
+<div class="description">
+    Every message coming from the webrepl to be printed on the terminal.
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 </article>
 
@@ -3992,13 +2900,13 @@ repl.onConnected = function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="WebREPL.html">WebREPL</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="WebREPL.html">WebREPL</a></li></ul><h3>Events</h3><ul><li><a href="WebREPL.html#event:authenticated">authenticated</a></li><li><a href="WebREPL.html#event:connected">connected</a></li><li><a href="WebREPL.html#event:data">data</a></li><li><a href="WebREPL.html#event:disconnected">disconnected</a></li><li><a href="WebREPL.html#event:error">error</a></li><li><a href="WebREPL.html#event:output">output</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 19 2018 09:44:21 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Oct 23 2018 13:41:46 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>
