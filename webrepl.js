@@ -1,48 +1,80 @@
-// Please, all the credit to the FABULOUS work of https://github.com/micropython/webrepl
+import { EventEmitter } from './event-emitter.js';
+/**
+ * WebSocket connection is opened.
+ * @event WebREPL#connected
+ */
+/**
+ * WebSocket connection is closed.
+ * @event WebREPL#disconnected
+ */
+/**
+ * Incoming WebSocket connection error or internal WebREPL error.
+ * @event WebREPL#error
+ * @type {ErrorEvent}
+ */
+/**
+ * WebREPL authenticated session with success.
+ * @event WebREPL#authenticated
+ */
+/**
+ * Every message coming from the webrepl to be printed on the terminal.
+ * @event WebREPL#output
+ * @type {string}
+ */
+/**
+ * `ArrayBuffer` coming from the webrepl.
+ * @event WebREPL#data
+ * @type {ArrayBuffer}
+ */
 
-class WebREPL {
+class WebREPL extends EventEmitter {
     /**
      * Represents a WebREPL connection.
      * @constructor
-     * @param {object} opts
-     * @param {number} opts.binaryState
-     * @param {string} opts.ip
-     * @param {string} opts.password
-     * @param {string} opts.sendFileName
-     * @param {ArrayBuffer} opts.sendFileData
-     * @param {string} opts.getFileName
-     * @param {ArrayBuffer} opts.getFileData
-     * @param {boolean} opts.autoconnect
+     * @param {object} [opts] - Initialization option
+     * @param {string} [opts.ip] - Ip address to connect to.
+     * @param {string} [opts.password] - Password to authenticate webrepl session.
+     * @param {boolean} [opts.autoConnect] - Flags if should connect automatically when instantiating WebREPL class.
+     * @param {boolean} [opts.autoAuth] - Flags if should authenticate the webrepl session automatically.
+     * @param {number} [opts.timeout] - How long, in milliseconds, should wait for response from webrepl.
+     * @property {string} [ip='192.168.4.1'] - Ip address to connect to.
+     * @property {string} [password='micropythoN'] - Password to authenticate webrepl session.
+     * @property {boolean} [autoConnect=false] - Flags if should connect automatically when instantiating WebREPL class.
+     * @property {boolean} [autoAuth=false] - Flags if should authenticate the webrepl session automatically.
+     * @property {number} [timeout=5000] - How long, in milliseconds, should wait for response from webrepl.
+     * @property {string} outputBuffer - Output buffer.
      * @property {WebSocket} ws - WebSocket connection with board.
-     * @property {number} [opts.binaryState=0]
-     * @property {string} [opts.ip='192.168.4.1']
-     * @property {string} [opts.password='micropythoN']
-     * @property {string} [opts.sendFileName='']
-     * @property {ArrayBuffer} [opts.sendFileData={}]
-     * @property {string} [opts.getFileName='']
-     * @property {ArrayBuffer} [opts.getFileData={}]
-     * @property {boolean} [opts.autoconnect=false]
      * @example
      * let repl = new WebREPL({
      *     ip: '192.168.1.4',
      *     password: 'micropythoN',
-     *     autoconnect: true
+     *     autoConnect: true,
+     *     autoAuth: true,
+     *     timeout: 5000
      * })
      */
     constructor(opts) {
+        super()
+
+        this.STOP = '\r\x03' // CTRL-C
+        this.RESET = '\r\x04' // CTRL-D
+        this.ENTER_RAW_REPL = '\r\x01' // CTRL-A
+        this.EXECUTE_RAW_REPL = '\r\x04' // CTRL-D
+        this.EXIT_RAW_REPL = '\r\x02' // CTRL-B
+
         opts = opts || {}
-        this.binaryState = 0
         this.ip = opts.ip || '192.168.4.1'
         this.password = opts.password || 'micropythoN'
+        this.autoAuth = !!opts.autoAuth
+        this.autoConnect = !!opts.autoConnect
+        this.timeout = opts.timeout || 5000
+
         this.sendFileName = ''
         this.sendFileData = new ArrayBuffer()
         this.getFileName = ''
         this.getFileData = new ArrayBuffer()
-        this.STOP = '\r\x03' // CTRL-C
-        this.RESET = '\r\x04' // CTRL-D
-        this.ENTER_RAW_REPL = '\r\x01' // CTRL-A
-        this.EXIT_RAW_REPL = '\r\x04\r\x02' // CTRL-D + CTRL-B
-        if (opts.autoconnect) {
+
+        if (this.autoConnect) {
             this.connect()
         }
     }
@@ -56,12 +88,26 @@ class WebREPL {
      * repl.connect()
      */
     connect() {
-        this.ws = new WebSocket(`ws://${this.ip}:8266`)
-        this.ws.binaryType = 'arraybuffer'
-        this.ws.onopen = () => {
-            this.onConnected()
-            this.ws.onmessage = this._handleMessage.bind(this)
+        try {
+            this.ws = new WebSocket(`ws://${this.ip}:8266`)
+            this.ws.binaryType = 'arraybuffer'
+            this.ws.onopen = this._onOpen.bind(this)
+            this.ws.onerror = this._onError.bind(this)
+            this.ws.onclose = this._onClose.bind(this)
+        } catch(err) {
+            this._onError(err)
         }
+    }
+
+    _onOpen() {
+        this.emit('connected')
+        this.ws.onmessage = this._handleMessage.bind(this)
+    }
+    _onError(err) {
+        this.emit('error', err)
+    }
+    _onClose() {
+        this.emit('disconnected')
     }
 
     /**
@@ -75,68 +121,13 @@ class WebREPL {
     }
 
     /**
-     * Called when websocket connection is opened.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnect = () => {
-     *     console.log('connected')
-     * }
-     */
-    onConnected() {}
-
-    /**
-     * Called on incoming string websocket messages.
-     * @param {string} msg - Incoming message from websocket connection.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onMessage = (msg) => {
-     *     console.log('got message', msg)
-     * }
-     */
-    onMessage(msg) {}
-
-    /**
-     * Called when websocket connection sends a blob file to be saved.
-     * @param {blob} blob - Incoming file from websocket connection.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.saveAs = (blob) => {
-     *     if(window.saveAs) {
-     *         // From `FileSaver.js`
-     *         saveAs(blob)
-     *     } else {
-     *         console.log('File to save', blob)
-     *     }
-     * }
-     * repl.onConnected = (blob) => {
-     *     repl.loadFile('boot.py')
-     * }
-     */
-    saveAs(blob) {}
-
-    /**
-     * Called when sendFile is completed (put operation)
-     * @param {string} filename - File name.
-     * @param {ArrayBuffer} filedata - File content.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onSent = (filename, filedata) => {
-     *     console.log('sent file', filename, filedata)
-     * }
-     * repl.onConnected = () => {
-     *     repl.sendFile('foo.py', new ArrayBuffer())
-     * }
-     */
-    onSent(filename, filedata) {}
-
-    /**
      * Sends a keyboard interrupt character (CTRL-C).
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
+     * let repl = new WebREPL({ autoConnect: true })
      * let stopButton = document.querySelector('#stop-code')
-     * repl.onConnected = () => {
-     *     stopButton.addEventListener('click', repl.sendStop.bind(this))
-     * }
+     * repl.on('authenticated', () => {
+     *     stopButton.addEventListener('click', repl.sendStop.bind(repl))
+     * })
      */
     sendStop() {
         this.eval(this.STOP)
@@ -146,11 +137,11 @@ class WebREPL {
      * Sends a keyboard interruption (sendStop) and then the character to
      * perform a software reset on the board (CTRL-D).
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
+     * let repl = new WebREPL({ autoConnect: true })
      * let resetButton = document.querySelector('#reset-button')
-     * repl.onConnected = function() {
-     *     resetButton.addEventListener('click', repl.softReset.bind(this))
-     * }
+     * repl.on('authenticated', function() {
+     *     resetButton.addEventListener('click', (e) => repl.softReset())
+     * })
      */
     softReset() {
         this.sendStop()
@@ -159,101 +150,202 @@ class WebREPL {
 
     /**
      * Sends character to enter RAW Repl mode (CTRL-A).
+     * @return {Promise} - Resolves when board enters in raw repl mode, rejects if timeout.
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
-     *      this.enterRawRepl()
-     *      // Eval or execute code here
-     *      this.exitRawRepl()
-     * }
+     * let repl = new WebREPL({ autoConnect: true })
+     * repl.on('authenticated', function() {
+     *     repl.enterRawRepl()
+     *         .then(() => {
+     *             // RAW REPL
+     *         })
+     *     })
+     * })
      */
     enterRawRepl() {
-        this.eval(this.ENTER_RAW_REPL)
+        return new Promise((resolve, reject) => {
+            let timeout = setTimeout(() => {
+                reject(new Error('Timeout: Could not enter raw repl mode.'))
+            }, this.timeout)
+            let onOutput = (output) => {
+                if (output.indexOf('raw REPL; CTRL-B to exit') != -1) {
+                    this.removeListener('output', onOutput)
+                    resolve()
+                }
+            }
+            this.on('output', onOutput)
+            this.eval(this.ENTER_RAW_REPL)
+        })
+    }
+
+    /**
+     * Evaluate the code on raw repl line by line and resolve promise when it
+     * gets executed (prints "OK"). If `interval` is passed, wait that amount
+     * of time before evaluating next line (important for ESP32 WebREPL).
+     * @param {string} code - String containing lines of code separated by `\n`.
+     * @param {number} interval - Interval in milliseconds between the lines of code.
+     * @return {Promise} Resolves when code is pasted and executed (got `OK` from repl) on raw repl mode.
+     * @example
+     * let repl = new WebREPL({ autoConnect: true })
+     * let code = `for i in range(0, 10):\n    print(i)`
+     * repl.on('authenticated', function() {
+     *     this.enterRawRepl()
+     *         .then(() => this.execRaw(code, 30))
+     *         .then(() => this.exitRawRepl(code))
+     * })
+     */
+    execRaw(code, interval) {
+        return new Promise((resolve, reject) => {
+            let buffer = ''
+            let onOutput = (output) => {
+                if (output.indexOf('OK') != -1) {
+                    this.removeListener('output', onOutput)
+                    resolve()
+                }
+            }
+            this.on('output', onOutput)
+            if(interval) {
+                code.split('\n').forEach((line, i) => {
+                    setTimeout(() => {
+                        this.eval(`${line}\r`)
+                        this.emit('output', '.')
+                    }, i*30)
+                })
+                setTimeout(() => {
+                    this.eval(this.EXECUTE_RAW_REPL)
+                }, (code.split('\n').length + 1)*30 )
+            } else {
+                this.eval(code)
+                this.eval(this.EXECUTE_RAW_REPL)
+            }
+        })
     }
 
     /**
      * Sends character to enter RAW Repl mode (CTRL-D + CTRL-B).
+     * @return {Promise} Resolves when exits raw repl mode (Gets MicroPython booting message).
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
-     *      this.enterRawRepl()
-     *      // Eval or execute code here
-     *      this.exitRawRepl()
-     * }
+     * let repl = new WebREPL({ autoConnect: true })
+     * repl.on('authenticated', function() {
+     *     repl.enterRawRepl()
+     *         .then(() => repl.execRaw('print("hello world!")'))
+     *         .then(() => repl.exitRawRepl())
+     * })
      */
     exitRawRepl() {
-        this.eval(this.EXIT_RAW_REPL)
+        return new Promise((resolve, reject) => {
+            let onOutput = (output) => {
+                let endRaw = 'Type "help()" for more information.'
+                if (output.indexOf(endRaw) != -1) {
+                    this.removeListener('output', onOutput)
+                    resolve()
+                }
+            }
+            this.on('output', onOutput)
+            this.eval(this.EXIT_RAW_REPL)
+        })
     }
 
     /**
-     * Evaluate command to the board followed by a line break (\r).
-     * @param {string} command - Command to be executed by WebREPL.
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
-     *     this.exec('print("hello world!")')
-     * }
-     */
-    exec(command) {
-        this.eval(command + '\r')
-    }
-
-    /**
-     * Execute a string containing lines of code separated by `\n` in RAW REPL
+     * Execute a string containing lines of code separated by `\n` in raw repl
      * mode. It will send a keyboard interrupt before entering RAW REPL mode.
      * @param {string} code - String containing lines of code separated by `\n`.
+     * @param {number} interval - Interval in milliseconds between the lines of code.
+     * @return {Promise} Resolves when exits raw repl mode.
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * let code = `from time import sleep\nwhile True:\n    sleep(1)`
-     * repl.onConnected = function() {
+     * let repl = new WebREPL({ autoConnect: true })
+     * let code = `for i in range(0, 10):\n    print(i)`
+     * repl.on('authenticated', function() {
      *     this.execFromString(code)
-     * }
+     *         .then(() => console.log('code executed'))
+     *
+     * })
      */
-    execFromString(code) {
+    execFromString(code, interval) {
         this.sendStop()
-        this.enterRawRepl()
-        this.eval(code)
-        this.exitRawRepl()
+        return this.enterRawRepl()
+            .then(() => this.execRaw(code, interval))
+            .then(() => this.exitRawRepl())
     }
 
     /**
      * Send command to websocket connection.
      * @param {string} command - Command to be sent.
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * repl.onConnected = function() {
+     * let repl = new WebREPL({ autoConnect: true })
+     * repl.on('authenticated', function() {
      *     this.eval('print("hello world!")\r')
-     * }
+     * })
      */
     eval(command) {
         this.ws.send(command)
     }
 
     /**
-     * Save file to MicroPython's filesystem. Will use the filename from the
-     * `file` argument object as the filesystem path.
-     * @param {string} filename - Name of file to be sent
-     * @param {Uint8Array} buffer - Typed array buffer with content of file
-     * to be sent.
+     * Evaluate command to the board followed by a line break (\r).
+     * @param {string} command - Command to be executed by WebREPL.
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * let filename = 'foo.py'
-     * let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
-     * repl.sendFile(filename, buffer)
+     * let repl = new WebREPL({ autoConnect: true })
+     * repl.on('authenticated', function() {
+     *     repl.exec('print("hello world!")')
+     * })
      */
-    sendFile(filename, buffer) {
-        this.sendFileName = filename
-        this.sendFileData = buffer
-        let rec = this._getPutBinary(
-            this.sendFileName, this.sendFileData.length
-        )
-        // initiate put
-        this.binaryState = 11
-        console.log('Sending ' + this.sendFileName + '...')
-        this.ws.send(rec)
+    exec(command) {
+        this.eval(command + '\r')
     }
 
     /**
+     * Save file to MicroPython's filesystem. Will use the filename from the
+     * `file` argument object as the filesystem path.
+     * @param {string} filename - Name of file to be sent
+     * @param {Uint8Array} putFileData - Typed array buffer with content of file to be sent.
+     * @return {Promise} Resolves when file is sent.
+     * @example
+     * let repl = new WebREPL({ autoConnect: true })
+     * let filename = 'foo.py'
+     * let buffer = new TextEncoder("utf-8").encode('print("hello world!")');
+     * repl.on('authenticated', function() {
+     *     repl.sendFile(filename, buffer)
+     * })
+     */
+    sendFile(filename, putFileData) {
+        return new Promise((resolve, reject) => {
+            let timeout = setTimeout(() => {
+                reject(new Error('Timeout: Could not send file.'))
+            }, this.timeout)
+            let initialResponse = (data) => {
+                clearTimeout(timeout)
+                let response = new Uint8Array(data)
+                if (this._decode_response(response) == 0) {
+                    // Unregister itself
+                    this.removeListener('data', initialResponse)
+                    // Register listener for final response
+                    this.on('data', finalResponse)
+                    // Send file in chunks
+                    for (let offset = 0; offset < putFileData.length; offset += 1024) {
+                        this.ws.send(putFileData.slice(offset, offset + 1024))
+                    }
+                }
+            }
+            let finalResponse = (data) => {
+                let response = new Uint8Array(data)
+                if (this._decode_response(response) == 0) {
+                    // Unregister itself
+                    this.removeListener('data', finalResponse)
+                    // Resolve promise
+                    resolve()
+                }
+            }
+
+            // Register listener for initial response
+            this.on('data', initialResponse)
+
+            // Send request to open file
+            let rec = this._getPutBinary(filename, putFileData.length)
+            this.ws.send(rec)
+        })
+    }
+
+    /*
      * Given a filename and the file size, get a `Uint8Array` with fixed length
      * and specific bits set to send a "put" request to MicroPython.
      * @param {string} filename - File name
@@ -283,8 +375,9 @@ class WebREPL {
     /**
      * Load file from MicroPython's filesystem.
      * @param {string} filename - File name
+     * @return {Promise} Resolves with `Uint8Array` containing the data from requested file.
      * @example
-     * let repl = new WebREPL({ autoconnect: true })
+     * let repl = new WebREPL({ autoConnect: true })
      * let filename = 'foo.py'
      * repl.saveAs = (blob) => {
      *     console.log('File content', blob)
@@ -292,16 +385,48 @@ class WebREPL {
      * repl.loadFile(filename)
      */
     loadFile(filename) {
-        this.getFileName = filename
-        this.getFileData = new Uint8Array(0)
-        let rec = this._getGetBinary(this.getFileName)
-        // initiate get
-        this.binaryState = 21
-        console.log('Getting ' + this.getFileName + '...')
-        this.ws.send(rec)
+        return new Promise((resolve, reject) => {
+            let fileBuffer = new Uint8Array()
+            let timeout = setTimeout(() => {
+                reject(new Error('Timeout: Could not get file.'))
+            }, this.timeout)
+            let initialResponse = (data) => {
+                let response = new Uint8Array(data)
+                if (this._decode_response(response) == 0) {
+                    this.removeListener('data', initialResponse)
+                    this.on('data', onFileData)
+                    let nextRec = new Uint8Array(1)
+                    nextRec[0] = 0
+                    this.ws.send(nextRec)
+                }
+            }
+            let onFileData = (data) => {
+                let response = new Uint8Array(data)
+                var sz = response[0] | (response[1] << 8);
+                if (response.length == 2 + sz) {
+                    // we assume that the data comes in single chunks
+                    if (sz != 0) {
+                        // accumulate incoming data to fileBuffer
+                        let newBuffer = new Uint8Array(fileBuffer.length + sz)
+                        newBuffer.set(fileBuffer)
+                        newBuffer.set(response.slice(2), fileBuffer.length)
+                        fileBuffer = newBuffer
+                        let rec = new Uint8Array(1)
+                        rec[0] = 0
+                        this.ws.send(rec)
+                    }
+                } else {
+                    this.removeListener('data', onFileData)
+                    resolve(fileBuffer)
+                }
+            }
+            let rec = this._getGetBinary(filename)
+            this.on('data', initialResponse)
+            this.ws.send(rec)
+        })
     }
 
-    /**
+    /*
      * Given a filename, get a `Uint8Array` with fixed length and specific bits
      * set to send a "get" request to MicroPython.
      * @param {string} filename - File name
@@ -327,35 +452,21 @@ class WebREPL {
         return rec
     }
 
-    /**
-     * Remove file from MicroPython's filesystem.
-     * @param {string} filename - File name
-     * @example
-     * let repl = new WebREPL({ autoconnect: true })
-     * let filename = 'foo.py'
-     * repl.removeFile(filename)
+    /*
+     * Makes sure incoming data is valid.
+     * @param {ArrayBuffer} - Incoming data from webrepl.
+     * @return {number} Returns `0` if valid and `-1` otherwise.
      */
-    removeFile(filename) {
-        const pCode = `from os import remove
-remove('${filename}')`
-        this.execFromString(pCode)
-    }
-
-    /**
-     * Decode ArrayBuffer message from websocket.
-     * @param {ArrayBuffer} data - Incoming ArrayBuffer coming from websocket
-     * @returns {number}
-     */
-    _decodeResp(data) {
+    _decode_response(data) {
         if (data[0] == 'W'.charCodeAt(0) && data[1] == 'B'.charCodeAt(0)) {
-            let code = data[2] | (data[3] << 8)
+            var code = data[2] | (data[3] << 8);
             return code;
         } else {
             return -1;
         }
     }
 
-    /**
+    /*
      * Handles incoming data from websocket based on the data and current
      * binaryState the WebREPL currently is set to.
      * @param {object} event - Incoming event object from websocket connection.
@@ -364,133 +475,22 @@ remove('${filename}')`
      */
     _handleMessage(event) {
         if (event.data instanceof ArrayBuffer) {
-            let data = new Uint8Array(event.data)
-            console.log(data, this.binaryState)
-            switch (this.binaryState) {
-                case 11:
-                    this._initPut(data)
-                    break
-                case 12:
-                    this._finalPut(data)
-                    break;
-                case 21:
-                    this._initGet(data)
-                    break;
-                case 22:
-                    this._processGet(data)
-                    break
-                case 23:
-                    this._finalGet(data)
-                    break
-                case 31:
-                    this._getVersion(data)
-                    break
+            this.emit('data', event.data)
+        } else if (typeof event.data === 'string') {
+            this.emit('output', event.data)
+            // If is asking for password, send password
+            if (event.data == 'Password: ' && this.autoAuth) {
+                this.ws.send(`${this.password}\r`)
             }
-        }
-        // If is asking for password, send password
-        if( event.data == 'Password: ' ) {
-            this.ws.send(`${this.password}\r`)
-        }
-        this.onMessage(event.data)
-    }
-
-    /**
-     * Method called when a specific ArrayBuffer data is received from websocket
-     * and the binaryState is 11. This will set the binaryState to 12 and will
-     * send the file data through websocket.
-     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
-     */
-    _initPut(data) {
-        // first response for put
-        if (this._decodeResp(data) == 0) {
-            // send file data in chunks
-            for (let offset = 0; offset < this.sendFileData.length; offset += 1024) {
-                this.ws.send(this.sendFileData.slice(offset, offset + 1024))
-            }
-        }
-    }
-
-    /**
-     * Method called when a specific ArrayBuffer data is received from websocket
-     * and the binaryState is 12. This means the WebREPL class has finished the
-     * put request and will set the binaryState back to 0.
-     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
-     */
-    _finalPut(data) {
-        // final response for put
-        if (this._decodeResp(data) == 0) {
-            console.log(`Sent ${this.sendFileName}, ${this.sendFileData.length} bytes`)
-            this.onSent(this.sendFileName, this.sendFileData)
-        } else {
-            console.log(`Failed sending ${this.sendFileName}`)
-        }
-        this.binaryState = 0
-    }
-
-    /**
-     * Method called when getting a specific ArrayBuffer data from websocket and
-     * binaryState is 21.  This put the WebREPL class in a state ready to
-     * process file data comming from the websocket.
-     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
-     */
-    _initGet(data) {
-        // first response for get
-        if (this._decodeResp(data) == 0) {
-            this.binaryState = 22
-            let rec = new Uint8Array(1)
-            rec[0] = 0
-            this.ws.send(rec)
-        }
-    }
-
-    /**
-     * Method called when getting a specific ArrayBuffer data from websocket and
-     * binaryState is 22.  This will process the incoming data coming from the
-     * websocket appending it to the getFileData. Once the it gets and empty
-     * data it sets the binaryState to 23, putting the WebREPL class in a state
-     * ready to handle the file data.
-     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
-     */
-    _processGet(data) {
-        // file data
-        let sz = data[0] | (data[1] << 8)
-        if (data.length == 2 + sz) {
-            // we assume that the data comes in single chunks
-            if (sz == 0) {
-                // end of file
-                this.binaryState = 23
-            } else {
-                // accumulate incoming data to this.getFileData
-                let new_buf = new Uint8Array(this.getFileData.length + sz)
-                new_buf.set(this.getFileData)
-                new_buf.set(data.slice(2), this.getFileData.length)
-                this.getFileData = new_buf
-                console.log('Getting ' + this.getFileName + ', ' + this.getFileData.length + ' bytes')
-                let rec = new Uint8Array(1)
-                rec[0] = 0
-                this.ws.send(rec)
+            if (event.data.indexOf('WebREPL connected') != -1) {
+                this.emit('authenticated')
             }
         } else {
-            this.binaryState = 0
+            this._onError(new Error('Unrecognized data format.'))
         }
-    }
-
-    /**
-     * Method called when a specific ArrayBuffer data is received from websocket
-     * and the binaryState is 23. This means the WebREPL class has finished to
-     * load/process the requested file and will set the binaryState back to 0
-     * but also call saveAs with a Blob instance containing the file name and
-     * data.
-     * @param {ArrayBuffer} data - Incoming ArrayBuffer data from websocket
-     */
-    _finalGet(data) {
-        // final response
-        if (this._decodeResp(data) == 0) {
-            console.log(`Got ${this.getFileName}, ${this.getFileData.length} bytes`)
-            this.saveAs(new Blob([this.getFileData], {type: "application/octet-stream"}), this.getFileName)
-        } else {
-            console.log(`Failed getting ${this.getFileName}`)
-        }
-        this.binaryState = 0
     }
 }
+
+export default WebREPL;
+
+export { WebREPL };
