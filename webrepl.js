@@ -208,11 +208,11 @@ class WebREPL extends EventEmitter {
                     setTimeout(() => {
                         this.eval(`${line}\r`)
                         this.emit('output', '.')
-                    }, i*30)
+                    }, i*interval)
                 })
                 setTimeout(() => {
                     this.eval(this.EXECUTE_RAW_REPL)
-                }, (code.split('\n').length + 1)*30 )
+                }, (code.split('\n').length + 1) * interval )
             } else {
                 this.eval(code)
                 this.eval(this.EXECUTE_RAW_REPL)
