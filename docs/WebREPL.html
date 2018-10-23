@@ -533,13 +533,13 @@
 
         <tr>
             
-                <td class="name"><code>outputBuffer</code></td>
+                <td class="name"><code>fileBuffer</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Uint8Array</span>
 
 
             
@@ -559,7 +559,7 @@
                 </td>
             
 
-            <td class="description last">Output buffer.</td>
+            <td class="description last">Buffer for files being requested by `loadFile`.</td>
         </tr>
 
     
@@ -750,7 +750,7 @@ and for parsing incoming messages.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line90">line 90</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -842,7 +842,7 @@ repl.connect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line119">line 119</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -934,7 +934,7 @@ repl.disconnect()</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line164">line 164</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -1103,7 +1103,7 @@ repl.on('authenticated', function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line279">line 279</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line276">line 276</a>
     </li></ul></dd>
     
 
@@ -1246,7 +1246,7 @@ repl.on('authenticated', function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line292">line 292</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -1413,7 +1413,7 @@ mode. It will send a keyboard interrupt before entering RAW REPL mode.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line263">line 263</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line260">line 260</a>
     </li></ul></dd>
     
 
@@ -1606,7 +1606,7 @@ of time before evaluating next line (important for ESP32 WebREPL).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line196">line 196</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line193">line 193</a>
     </li></ul></dd>
     
 
@@ -1725,7 +1725,7 @@ repl.on('authenticated', function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line234">line 234</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line231">line 231</a>
     </li></ul></dd>
     
 
@@ -1892,7 +1892,7 @@ repl.on('authenticated', function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line387">line 387</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line379">line 379</a>
     </li></ul></dd>
     
 
@@ -2083,7 +2083,7 @@ repl.loadFile(filename)</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line310">line 310</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line307">line 307</a>
     </li></ul></dd>
     
 
@@ -2201,7 +2201,7 @@ repl.on('authenticated', function() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line132">line 132</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -2297,7 +2297,7 @@ perform a software reset on the board (CTRL-D).
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line146">line 146</a>
+        <a href="webrepl.js.html">webrepl.js</a>, <a href="webrepl.js.html#line143">line 143</a>
     </li></ul></dd>
     
 
@@ -2906,7 +2906,7 @@ repl.on('authenticated', function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Oct 23 2018 13:41:46 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Oct 23 2018 18:38:37 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>
