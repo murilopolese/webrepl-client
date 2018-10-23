@@ -491,6 +491,6 @@ class WebREPL extends EventEmitter {
     }
 }
 
-export default WebREPL;
+export default WebREPL
 
-export { WebREPL };
+export { WebREPL }
