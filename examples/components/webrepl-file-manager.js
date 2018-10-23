@@ -16,7 +16,7 @@ class FileManagerComponent extends HTMLElement {
             :host {
                 display: block;
             }
-            #controls[disabled] input {
+            #controls[disabled] * {
                 pointer-events:none;
                 cursor: not-allowed;
                 opacity: 0.5;
