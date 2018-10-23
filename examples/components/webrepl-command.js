@@ -1,7 +1,8 @@
-class CommandComponent extends HTMLElement {
+import { BaseComponent } from './base-component.js'
+
+class CommandComponent extends BaseComponent {
     constructor() {
         super()
-        const shadowRoot = this.attachShadow({mode: 'open'})
     }
     static get observedAttributes() {
         return ['command', 'connected']
@@ -34,20 +35,13 @@ class CommandComponent extends HTMLElement {
         </form>
         `
     }
-    render() {
-        this.shadowRoot.innerHTML = this.template()
+    unbindEvents() {
+        let commandForm = this.shadowRoot.querySelector('#command')
+        commandForm.removeEventListener('submit', this.submitHandler)
+    }
+    bindEvents() {
         let commandForm = this.shadowRoot.querySelector('#command')
         commandForm.addEventListener('submit', this.submitHandler.bind(this))
-    }
-    connectedCallback() {
-        this.render()
-    }
-    get(attr) {
-        if(this.hasAttribute(attr)) {
-            return this.getAttribute(attr)
-        } else {
-            return ''
-        }
     }
     submitHandler(e) {
         e.preventDefault()

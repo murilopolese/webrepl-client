@@ -1,8 +1,9 @@
-class FileManagerComponent extends HTMLElement {
+import { BaseComponent } from './base-component.js'
+
+class FileManagerComponent extends BaseComponent {
     constructor() {
         super()
-        const shadowRoot = this.attachShadow({mode: 'open'})
-        this.files = ['']
+        this.files = []
     }
     static get observedAttributes() {
         return ['connected']
@@ -54,8 +55,7 @@ class FileManagerComponent extends HTMLElement {
         <div class="files">${this.files.join(`<br>`)}</div>
         `
     }
-    render() {
-        this.shadowRoot.innerHTML = this.template()
+    bindEvents() {
         let controlsForm = this.shadowRoot.querySelector('#controls')
         let listBtn = controlsForm.list
         let sendBtn = controlsForm.send
@@ -67,15 +67,17 @@ class FileManagerComponent extends HTMLElement {
         removeBtn.addEventListener('click', this.handleRemove.bind(this))
         getBtn.addEventListener('click', this.handleGet.bind(this))
     }
-    connectedCallback() {
-        this.render()
-    }
-    get(attr) {
-        if(this.hasAttribute(attr)) {
-            return this.getAttribute(attr)
-        } else {
-            return ''
-        }
+    unbindEvents() {
+        let controlsForm = this.shadowRoot.querySelector('#controls')
+        let listBtn = controlsForm.list
+        let sendBtn = controlsForm.send
+        let removeBtn = controlsForm.remove
+        let getBtn = controlsForm.get
+        controlsForm.removeEventListener('submit', this.submitHandler)
+        listBtn.removeEventListener('click', this.handleList)
+        sendBtn.removeEventListener('click', this.handleSend)
+        removeBtn.removeEventListener('click', this.handleRemove)
+        getBtn.removeEventListener('click', this.handleGet)
     }
     submitHandler(e) {
         e.preventDefault()

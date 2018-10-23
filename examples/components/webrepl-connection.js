@@ -1,15 +1,13 @@
-class ConnectionComponent extends HTMLElement {
+import { BaseComponent } from './base-component.js'
+
+class ConnectionComponent extends BaseComponent {
     constructor() {
         super()
-        const shadowRoot = this.attachShadow({ mode: 'open' })
     }
     static get observedAttributes() {
         return ['connected', 'ip', 'password']
     }
     attributeChangedCallback(attrName, oldVal, newVal) {
-        this.render()
-    }
-    connectedCallback() {
         this.render()
     }
     template() {
@@ -41,17 +39,13 @@ class ConnectionComponent extends HTMLElement {
             </form>
         `
     }
-    render() {
-        this.shadowRoot.innerHTML = this.template()
+    unbindEvents() {
+        let connectionForm = this.shadowRoot.querySelector('#connection')
+        connectionForm.removeEventListener('submit', this.connectHandler)
+    }
+    bindEvents() {
         let connectionForm = this.shadowRoot.querySelector('#connection')
         connectionForm.addEventListener('submit', this.connectHandler.bind(this))
-    }
-    get(attr) {
-        if(this.hasAttribute(attr)) {
-            return this.getAttribute(attr)
-        } else {
-            return ''
-        }
     }
     connectHandler(e) {
         e.preventDefault()

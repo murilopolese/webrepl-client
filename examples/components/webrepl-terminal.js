@@ -1,7 +1,8 @@
-class TerminalComponent extends HTMLElement {
+import { BaseComponent } from './base-component.js'
+
+class TerminalComponent extends BaseComponent {
     constructor() {
         super()
-        const shadowRoot = this.attachShadow({mode: 'open'})
         this.log = ''
     }
     static get observedAttributes() {
@@ -32,16 +33,9 @@ class TerminalComponent extends HTMLElement {
         </div>
         `
     }
-    render() {
-        this.shadowRoot.innerHTML = this.template()
-    }
     output(msg) {
         this.log += msg.replace('\n', '<br>')
         this.render()
     }
-    connectedCallback() {
-        this.render()
-    }
-
 }
 customElements.define('webrepl-terminal', TerminalComponent)
