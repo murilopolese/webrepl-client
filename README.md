@@ -17,6 +17,7 @@ This library extracts most logic to interact with MicroPython's WebREPL from [th
 - Send keyboard interrupt and software reset
 - "Raw repl" and file operations return promises.
 - Optional interval between lines of code on `execFromString` necessary for the ESP32 implementation of the WebREPL protocol.
+- Offers ES6 module, CommonJS and "iife" support.
 
 ### Documentation and examples
 
@@ -33,7 +34,7 @@ You can find class [documentation](https://murilopolese.github.io/webrepl-client
 ### Roadmap
 
 - Build production ready single, minified, gziped file (on a CDN?).
-- Offer AMD, CommonJS and "no module loading" support
+- Offer AMD support
 - Nodejs support using a WebSocket module
 - Finish tests (ops!)
 - Clearer documentation of WebREPL protocol
