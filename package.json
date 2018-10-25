@@ -5,7 +5,9 @@
   "main": "webrepl.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "docs": "./node_modules/.bin/jsdoc webrepl.js README.md -d ./docs"
+    "docs": "./node_modules/.bin/jsdoc webrepl.js README.md -d ./docs",
+    "build-iife": "./node_modules/.bin/rollup webrepl.js -o webrepl.iife.js -n WebREPL -f iife",
+    "build-cjs": "./node_modules/.bin/rollup webrepl.js -o webrepl.cjs.js -n WebREPL -f cjs"
   },
   "repository": {
     "type": "git",
@@ -19,8 +21,11 @@
   "homepage": "https://github.com/murilopolese/webrepl-client#readme",
   "devDependencies": {
     "chai": "^4.2.0",
+    "custom-elements": "^1.0.2",
     "jsdoc": "^3.5.5",
     "mocha": "^5.2.0",
+    "rollup": "^0.66.6",
     "simple-mock": "^0.8.0"
-  }
+  },
+  "dependencies": {}
 }
